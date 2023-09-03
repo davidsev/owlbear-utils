@@ -1,4 +1,4 @@
-import { Grid } from '../../src/Grid';
+import { Grid } from '../../src';
 import OBR, {
     fakeGridDataHexEuclid,
     fakeGridDataSquareChess,
