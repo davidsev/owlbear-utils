@@ -43,6 +43,7 @@ export const fakeGridDataHexEuclid: BaseGrid = {
 };
 
 const OBR = {
+    onReady: jest.fn(),
     scene: {
         grid: {
             onChange: jest.fn(),
