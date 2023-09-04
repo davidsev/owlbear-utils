@@ -3,7 +3,7 @@ import { SnapTo } from './Grid/SnapTo';
 import { Cell } from './Grid/Cell/Cell';
 import { Square } from './Grid/Cell/Square';
 import { VHex } from './Grid/Cell/VHex';
-import { Vector } from './Vector';
+import { Point } from './Point';
 import { HHex } from './Grid/Cell/HHex';
 
 const SQRT3 = Math.sqrt(3);
@@ -97,12 +97,12 @@ export class Grid implements BaseGrid {
         throw new Error(`Grid type "${this.gridData.type}" not supported`);
     }
 
-    public snapTo (point: Vector2, snapTo: SnapTo): Vector {
+    public snapTo (point: Vector2, snapTo: SnapTo): Point {
 
         const cell = this.getCell(point);
 
         // Make a list of the places we can snap to.
-        const possibleSnapPoints: Vector[] = [];
+        const possibleSnapPoints: Point[] = [];
 
         // Work out each selected point.
         if (snapTo & SnapTo.CENTER)
@@ -112,7 +112,7 @@ export class Grid implements BaseGrid {
 
         // If we have no points to snap to, return the original point.
         if (possibleSnapPoints.length === 0) {
-            return new Vector(point);
+            return new Point(point);
         }
         // If there's only one, then return that.
         if (possibleSnapPoints.length === 1) {
@@ -120,7 +120,7 @@ export class Grid implements BaseGrid {
         }
 
         // If there's more than one, work out which is closest to the original point.
-        let closestPoint: Vector = possibleSnapPoints[0];
+        let closestPoint: Point = possibleSnapPoints[0];
         let closestDistance: number = closestPoint.distanceTo(point);
         for (let i = 1; i < possibleSnapPoints.length; i++) {
             const distance = possibleSnapPoints[i].distanceTo(point);

@@ -1,10 +1,10 @@
-import { Vector } from '../../Vector';
+import { Point } from '../../Point';
 
 export abstract class Cell {
 
-    public abstract get center (): Vector;
+    public abstract get center (): Point;
 
-    public abstract get corners (): Vector[];
+    public abstract get corners (): Point[];
 
     public abstract toString (): string;
 }
