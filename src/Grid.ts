@@ -5,6 +5,7 @@ import { Square } from './Grid/Cell/Square';
 import { VHex } from './Grid/Cell/VHex';
 import { Point } from './Point';
 import { HHex } from './Grid/Cell/HHex';
+import { Measure } from './Grid/MeasurementFunctions';
 
 const SQRT3 = Math.sqrt(3);
 
@@ -130,5 +131,26 @@ export class Grid implements BaseGrid {
             }
         }
         return closestPoint;
+    }
+
+    /** Returns the distance between two point, measured in grid cells. */
+    public measure (a: Cell, b: Cell): number {
+        if (!this.gridData)
+            throw new Error('Grid data not loaded yet');
+
+        if (this.gridData.measurement == 'EUCLIDEAN')
+            return Measure.euclidean(a, b);
+        if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'CHEBYSHEV')
+            return Measure.chebyshevSquare(a, b);
+        if (this.gridData.type === 'HEX_VERTICAL' && this.gridData.measurement === 'CHEBYSHEV')
+            return Measure.chebyshevVHex(a, b);
+        if (this.gridData.type === 'HEX_HORIZONTAL' && this.gridData.measurement === 'CHEBYSHEV')
+            return Measure.chebyshevHHex(a, b);
+        if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'MANHATTAN')
+            return Measure.manhattanSquare(a, b);
+        if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'ALTERNATING')
+            return Measure.alternatingSquare(a, b);
+
+        return 0;
     }
 }
