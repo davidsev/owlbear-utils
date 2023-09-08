@@ -1,6 +1,6 @@
 {
   "name": "@davidsev/owlbear-utils",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "scripts": {
     "test": "jest"
   },
@@ -28,5 +28,5 @@
   "directories": {
     "test": "tests"
   },
-  "main": "src/index.js"
+  "main": "src/index.ts"
 }
