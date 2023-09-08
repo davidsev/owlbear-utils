@@ -138,27 +138,29 @@ export class Grid implements BaseGrid {
         if (!this.gridData)
             throw new Error('Grid data not loaded yet');
 
+        let pointA: Point;
         if (a instanceof Cell)
-            a = a.center;
+            pointA = a.center;
         else
-            a = new Point(a);
+            pointA = new Point(a);
+        let pointB: Point;
         if (b instanceof Cell)
-            b = b.center;
+            pointB = b.center;
         else
-            b = new Point(b);
+            pointB = new Point(b);
 
         if (this.gridData.measurement == 'EUCLIDEAN')
-            return Measure.euclidean(a, b);
+            return Measure.euclidean(pointA, pointB);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'CHEBYSHEV')
-            return Measure.chebyshevSquare(a, b);
+            return Measure.chebyshevSquare(pointA, pointB);
         if (this.gridData.type === 'HEX_VERTICAL' && this.gridData.measurement === 'CHEBYSHEV')
-            return Measure.chebyshevVHex(a, b);
+            return Measure.chebyshevVHex(pointA, pointB);
         if (this.gridData.type === 'HEX_HORIZONTAL' && this.gridData.measurement === 'CHEBYSHEV')
-            return Measure.chebyshevHHex(a, b);
+            return Measure.chebyshevHHex(pointA, pointB);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'MANHATTAN')
-            return Measure.manhattanSquare(a, b);
+            return Measure.manhattanSquare(pointA, pointB);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'ALTERNATING')
-            return Measure.alternatingSquare(a, b);
+            return Measure.alternatingSquare(pointA, pointB);
 
         return 0;
     }
