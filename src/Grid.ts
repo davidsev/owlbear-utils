@@ -134,9 +134,18 @@ export class Grid implements BaseGrid {
     }
 
     /** Returns the distance between two point, measured in grid cells. */
-    public measure (a: Cell, b: Cell): number {
+    public measure (a: Cell | Vector2, b: Cell | Vector2): number {
         if (!this.gridData)
             throw new Error('Grid data not loaded yet');
+
+        if (a instanceof Cell)
+            a = a.center;
+        else
+            a = new Point(a);
+        if (b instanceof Cell)
+            b = b.center;
+        else
+            b = new Point(b);
 
         if (this.gridData.measurement == 'EUCLIDEAN')
             return Measure.euclidean(a, b);
