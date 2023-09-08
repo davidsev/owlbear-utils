@@ -1,6 +1,6 @@
 {
-  "name": "owlbear-utils",
-  "version": "0.0.1",
+  "name": "@davidsev/owlbear-utils",
+  "version": "0.2.0",
   "scripts": {
     "test": "jest"
   },
