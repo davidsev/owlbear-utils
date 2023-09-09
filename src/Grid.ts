@@ -164,4 +164,18 @@ export class Grid implements BaseGrid {
 
         return 0;
     }
+
+    /** Get whether the point is closest to the corner or the center of a cell. */
+    public getNearestSnapType (point: Vector2): SnapTo {
+        if (!this.gridData)
+            throw new Error('Grid data not loaded yet');
+
+        const cell = this.getCell(point);
+        const closestPoint = this.snapTo(point, SnapTo.ALL);
+
+        if (closestPoint.equals(cell.center))
+            return SnapTo.CENTER;
+        else
+            return SnapTo.CORNER;
+    }
 }
