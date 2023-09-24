@@ -3,7 +3,8 @@
   "version": "0.5.1",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "description": "Some utility functions for owlbear.rodeo extensions",
   "repository": {
@@ -32,5 +33,6 @@
   "files": [
     "js"
   ],
-  "main": "js/index.js"
+  "main": "js/index.js",
+  "types": "js/index.d.ts"
 }
