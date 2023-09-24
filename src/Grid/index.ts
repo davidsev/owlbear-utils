@@ -1,11 +1,11 @@
 import OBR, { Grid as BaseGrid, GridMeasurement, GridScale, GridStyle, GridType, Vector2 } from '@owlbear-rodeo/sdk';
-import { SnapTo } from './Grid/SnapTo';
-import { Cell } from './Grid/Cell/Cell';
-import { Square } from './Grid/Cell/Square';
-import { VHex } from './Grid/Cell/VHex';
+import { SnapTo } from './SnapTo';
+import { Cell } from './Cell/Cell';
+import { Square } from './Cell/Square';
+import { VHex } from './Cell/VHex';
 import { Point } from './Point';
-import { HHex } from './Grid/Cell/HHex';
-import { Measure } from './Grid/MeasurementFunctions';
+import { HHex } from './Cell/HHex';
+import { Measure } from './MeasurementFunctions';
 
 const SQRT3 = Math.sqrt(3);
 

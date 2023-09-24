@@ -1,5 +1,5 @@
 import { Cell } from './Cell';
-import { Point } from '../../Point';
+import { Point } from '../Point';
 import { grid } from '../../index';
 import { Vector2 } from '@owlbear-rodeo/sdk';
 

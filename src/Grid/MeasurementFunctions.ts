@@ -1,5 +1,5 @@
 import { grid, Point } from '../index';
-import { xy_to_axial_h, xy_to_axial_v } from '../HexFunctions';
+import { xy_to_axial_h, xy_to_axial_v } from './HexFunctions';
 
 export const Measure = {
     euclidean: function euclidean (a: Point, b: Point): number {

@@ -1,8 +1,8 @@
-import { Point } from '../../Point';
+import { Point } from '../Point';
 import { Cell } from './Cell';
 import { Vector2 } from '@owlbear-rodeo/sdk';
 import { grid } from '../../index';
-import { axial_round, axial_to_xy_v, xy_to_axial_v } from '../../HexFunctions';
+import { axial_round, axial_to_xy_v, xy_to_axial_v } from '../HexFunctions';
 
 export class VHex extends Cell {
 

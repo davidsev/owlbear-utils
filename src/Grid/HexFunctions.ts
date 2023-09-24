@@ -1,4 +1,4 @@
-import { grid } from './index';
+import { grid } from '../index';
 
 // Mostly taken from https://www.redblobgames.com/grids/hexagons/
 
