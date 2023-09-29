@@ -10,6 +10,7 @@ export { SnapTo } from './Grid/SnapTo';
 export { Grid };
 export { ToolMetadataMapper } from './Metadata/Tool';
 export { RoomMetadataMapper } from './Metadata/Room';
+export { ItemMetadataMapper } from './Metadata/Item';
 export { awaitReady } from './awaitReady';
 
 export const grid = Grid.getInstance();
