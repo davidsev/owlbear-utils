@@ -7,7 +7,7 @@ export function cleanMetadata<T> (values: Metadata, defaultValues: T): T {
 
     // If any of the values are valid, copy them over.
     for (const key in defaultValues)
-        if (values[key] !== undefined && values[key] !== null && typeof (values[key]) === typeof (defaultValues[key]))
+        if (values[key] !== undefined && values[key] !== null)
             (clean[key] as any) = values[key];
 
     return clean;
