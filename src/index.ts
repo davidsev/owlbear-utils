@@ -11,6 +11,8 @@ export { Grid };
 export { ToolMetadataMapper } from './Metadata/Tool';
 export { RoomMetadataMapper } from './Metadata/Room';
 export { ItemMetadataMapper } from './Metadata/Item';
+export { SceneMetadataMapper } from './Metadata/Scene';
+export { PlayerMetadataMapper } from './Metadata/Player';
 export { awaitReady } from './awaitReady';
 
 export const grid = Grid.getInstance();
