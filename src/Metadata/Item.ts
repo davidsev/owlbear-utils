@@ -4,6 +4,7 @@ import { cleanMetadata } from './Base';
 export class ItemMetadataMapper<T> {
 
     constructor (
+        public readonly key: string,
         public readonly defaultValues: T,
     ) { }
 
@@ -12,14 +13,14 @@ export class ItemMetadataMapper<T> {
     }
 
     get (item: Item): T {
-        return this.clean(item.metadata);
+        const myMetadata = (item.metadata[this.key] || {}) as Metadata;
+        return this.clean(myMetadata);
     }
 
     set (item: Item, newMetadata: Partial<T>): T {
         const currentMetadata = this.get(item);
         const combinedMetadata = { ...currentMetadata, ...newMetadata };
-        item.metadata = combinedMetadata;
+        item.metadata[this.key] = { ...currentMetadata, ...newMetadata };
         return combinedMetadata;
     }
 }
-
