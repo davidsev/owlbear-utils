@@ -5,7 +5,7 @@ export class RoomMetadataMapper<T> extends BaseMetadataMapper<T> {
 
     protected async getRawMetadata (): Promise<Metadata> {
         const metadata = await OBR.room.getMetadata() || {};
-        return (metadata[this.key] || {} as Metadata) as Metadata;
+        return (metadata[this.key] || {}) as Metadata;
     }
 
     protected async setRawMetadata (newMetadata: Metadata): Promise<void> {
