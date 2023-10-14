@@ -19,6 +19,25 @@ export class Point implements Vector2 {
             throw new Error('Invalid arguments to Point constructor');
     }
 
+    public static nearestPoint (center: Vector2, points: Vector2[]): Point {
+        if (points.length === 0)
+            throw new Error('Cannot find nearest point of empty array');
+
+        const centerPoint = new Point(center);
+
+        let closestPoint = points[0];
+        let closestDistance: number = centerPoint.distanceTo(closestPoint);
+        for (let i = 1; i < points.length; i++) {
+            const distance = centerPoint.distanceTo(points[i]);
+            if (distance < closestDistance) {
+                closestPoint = points[i];
+                closestDistance = distance;
+            }
+        }
+        return new Point(closestPoint);
+
+    }
+
     public sub (rhs: Vector2): Point {
         return new Point({
             x: this.x - rhs.x,

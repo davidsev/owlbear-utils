@@ -110,6 +110,8 @@ export class Grid implements BaseGrid {
             possibleSnapPoints.push(cell.center);
         if (snapTo & SnapTo.CORNER)
             possibleSnapPoints.push(...cell.corners);
+        if (snapTo & SnapTo.EDGE)
+            possibleSnapPoints.push(cell.nearestPointOnEdge(point));
 
         // If we have no points to snap to, return the original point.
         if (possibleSnapPoints.length === 0) {
@@ -121,16 +123,7 @@ export class Grid implements BaseGrid {
         }
 
         // If there's more than one, work out which is closest to the original point.
-        let closestPoint: Point = possibleSnapPoints[0];
-        let closestDistance: number = closestPoint.distanceTo(point);
-        for (let i = 1; i < possibleSnapPoints.length; i++) {
-            const distance = possibleSnapPoints[i].distanceTo(point);
-            if (distance < closestDistance) {
-                closestPoint = possibleSnapPoints[i];
-                closestDistance = distance;
-            }
-        }
-        return closestPoint;
+        return Point.nearestPoint(point, possibleSnapPoints);
     }
 
     /** Returns the distance between two point, measured in grid cells. */

@@ -1,17 +1,10 @@
 import { Point } from '../Point';
-import { Cell } from './Cell';
 import { Vector2 } from '@owlbear-rodeo/sdk';
 import { grid } from '../../index';
 import { axial_round, axial_to_xy_v, xy_to_axial_v } from '../HexFunctions';
+import { BaseHex } from './BaseHex';
 
-export class VHex extends Cell {
-
-    public readonly center: Point;
-
-    constructor (center: Vector2) {
-        super();
-        this.center = new Point(center);
-    }
+export class VHex extends BaseHex {
 
     static fromCoords (point: Vector2): VHex {
 

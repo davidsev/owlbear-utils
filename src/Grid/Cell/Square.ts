@@ -30,4 +30,20 @@ export class Square extends Cell {
     public toString (): string {
         return `Square${this.center}`;
     }
+
+    public nearestPointOnEdge (point: Vector2): Point {
+        const minX = this.center.x - (grid.dpi / 2);
+        const maxX = this.center.x + (grid.dpi / 2);
+        const minY = this.center.y - (grid.dpi / 2);
+        const maxY = this.center.y + (grid.dpi / 2);
+
+        const points = [
+            { x: minX, y: point.y },
+            { x: maxX, y: point.y },
+            { x: point.x, y: minY },
+            { x: point.x, y: maxY },
+        ];
+
+        return Point.nearestPoint(point, points);
+    }
 }
