@@ -21,5 +21,9 @@ export abstract class Cell {
         }
         return lines;
     }
+
+    public isAdjacent (other: Cell): boolean {
+        return this.edges.some(edge => other.edges.some(otherEdge => edge.equals(otherEdge)));
+    }
 }
 

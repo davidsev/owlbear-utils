@@ -99,7 +99,7 @@ export class Point implements Vector2 {
     }
 
     public equals (rhs: Vector2): boolean {
-        return this.x === rhs.x && this.y === rhs.y;
+        return Math.abs(this.x - rhs.x) < 1 && Math.abs(this.y - rhs.y) < 1;
     }
 
     public toString (): string {

@@ -21,7 +21,12 @@ export class LineSegment {
         }
     }
 
-    public toString (): string {
-        return `Line(${this.p1.x},${this.p1.y} -> ${this.p2.x},${this.p2.y})`;
+    public toString (precision: number = 0): string {
+        const fmt = (n: number) => n.toFixed(precision).replace(/\.?0+$/, '');
+        return `Line(${fmt(this.p1.x)},${fmt(this.p1.y)} -> ${fmt(this.p2.x)},${fmt(this.p2.y)})`;
+    }
+
+    public equals (other: LineSegment): boolean {
+        return this.p1.equals(other.p1) && this.p2.equals(other.p2);
     }
 }
