@@ -29,4 +29,8 @@ export class LineSegment {
     public equals (other: LineSegment): boolean {
         return this.p1.equals(other.p1) && this.p2.equals(other.p2);
     }
+
+    public get length (): number {
+        return this.p1.distanceTo(this.p2);
+    }
 }
