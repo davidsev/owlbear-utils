@@ -69,4 +69,9 @@ export class HHex extends BaseHex {
 
         return cells;
     }
+
+    public containsPoint (point: Vector2): boolean {
+        const Cell = HHex.fromCoords(point);
+        return this.center.equals(Cell.center);
+    }
 }

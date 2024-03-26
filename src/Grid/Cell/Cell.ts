@@ -25,5 +25,7 @@ export abstract class Cell {
     public isAdjacent (other: Cell): boolean {
         return this.edges.some(edge => other.edges.some(otherEdge => edge.equals(otherEdge)));
     }
+
+    public abstract containsPoint (point: Vector2): boolean ;
 }
 

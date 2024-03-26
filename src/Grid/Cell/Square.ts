@@ -68,4 +68,11 @@ export class Square extends Cell {
 
         return cells;
     }
+
+    public containsPoint (point: Vector2): boolean {
+        return point.x >= this.center.x &&
+            point.x <= this.center.x &&
+            point.y >= this.center.y &&
+            point.y <= this.center.y;
+    }
 }
