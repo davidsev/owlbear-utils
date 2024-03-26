@@ -171,4 +171,21 @@ export class Grid implements BaseGrid {
         else
             return SnapTo.CORNER;
     }
+
+    public iterateCellsBoundingPoints<T extends (Square | VHex | HHex)> (points: T[]): T[] {
+        if (!this.gridData)
+            throw new Error('Grid data not loaded yet');
+
+        if (points.length === 0)
+            return [];
+
+        if (points[0] instanceof Square)
+            return Square.iterateCellsBoundingPoints(points) as T[];
+        if (this.gridData.type === 'HEX_VERTICAL')
+            return VHex.iterateCellsBoundingPoints(points) as T[];
+        if (this.gridData.type === 'HEX_HORIZONTAL')
+            return HHex.iterateCellsBoundingPoints(points) as T[];
+
+        throw new Error(`Grid type "${this.gridData.type}" not supported`);
+    }
 }

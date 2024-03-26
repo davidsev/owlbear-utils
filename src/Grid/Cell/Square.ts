@@ -46,4 +46,26 @@ export class Square extends Cell {
 
         return Point.nearestPoint(point, points);
     }
+
+    isAdjacent (other: Cell): boolean {
+        const xDiff = Math.abs(this.center.x - other.center.x);
+        const yDiff = Math.abs(this.center.y - other.center.y);
+        return (xDiff === grid.dpi && yDiff === 0) || (xDiff === 0 && yDiff === grid.dpi);
+    }
+
+    public static iterateCellsBoundingPoints (points: Square[]): Square[] {
+        const xMin = Math.min(...points.map(point => point.center.x));
+        const xMax = Math.max(...points.map(point => point.center.x));
+        const yMin = Math.min(...points.map(point => point.center.y));
+        const yMax = Math.max(...points.map(point => point.center.y));
+
+        const cells: Square[] = [];
+        for (let x = Math.floor(xMin); x <= Math.ceil(xMax); x += grid.dpi) {
+            for (let y = Math.floor(yMin); y <= Math.ceil(yMax); y += grid.dpi) {
+                cells.push(Square.fromCoords({ x, y }));
+            }
+        }
+
+        return cells;
+    }
 }

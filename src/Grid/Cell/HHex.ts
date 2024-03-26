@@ -1,8 +1,10 @@
 import { Point } from '../Point';
 import { Vector2 } from '@owlbear-rodeo/sdk';
-import { grid } from '../../index';
+import { Cell, grid } from '../../index';
 import { axial_round, axial_to_xy_h, xy_to_axial_h } from '../HexFunctions';
 import { BaseHex } from './BaseHex';
+
+const SQRT3 = Math.sqrt(3);
 
 export class HHex extends BaseHex {
 
@@ -34,5 +36,37 @@ export class HHex extends BaseHex {
 
     public toString (): string {
         return `VHex${this.center}`;
+    }
+
+    isAdjacent (other: Cell): boolean {
+        const xDiff = Math.abs(this.center.x - other.center.x);
+        const yDiff = Math.abs(this.center.y - other.center.y);
+        return (Math.abs(xDiff - grid.hexRadius * 1.5) < 1 && Math.abs(yDiff - grid.dpi * 0.5) < 1)
+            || (xDiff < 1 && Math.abs(yDiff - grid.dpi) < 1);
+    }
+
+    public static iterateCellsBoundingPoints (points: HHex[]): HHex[] {
+        let rMin = Infinity;
+        let rMax = -Infinity;
+        let qMin = Infinity;
+        let qMax = -Infinity;
+
+        for (const point of points) {
+            const [q, r] = xy_to_axial_h(point.center.x, point.center.y);
+            rMin = Math.min(rMin, r);
+            rMax = Math.max(rMax, r);
+            qMin = Math.min(qMin, q);
+            qMax = Math.max(qMax, q);
+        }
+
+        const cells: HHex[] = [];
+        for (let r = Math.floor(rMin); r <= Math.ceil(rMax); r++) {
+            for (let q = Math.floor(qMin); q <= Math.ceil(qMax); q++) {
+                const [x, y] = axial_to_xy_h(q, r);
+                cells.push(HHex.fromCoords({ x, y }));
+            }
+        }
+
+        return cells;
     }
 }
