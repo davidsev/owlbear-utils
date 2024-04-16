@@ -15,21 +15,42 @@ export class Grid implements BaseGrid {
     private static instance: Grid;
 
     /** Sets up the event listener, and resolves once the first data is loaded. */
-    public init () {
-        return new Promise<void>((resolve?: (value: (PromiseLike<void> | void)) => void) => {
-            // Watch for grid changes.
-            OBR.scene.grid.onChange(async (gridData) => {
-                // Copy in the data.
-                this.gridData = gridData;
-                // Also get the proper scale data.
-                this.scaleData = (await OBR.scene.grid.getScale());
-                // If this is the first call then resolve the promise.
-                if (resolve) {
-                    resolve();
-                    resolve = undefined;
-                }
-            });
+    public async init () {
+
+        // Watch for grid changes.
+        OBR.scene.grid.onChange(async (gridData) => {
+            // Copy in the data.
+            this.gridData = gridData;
+            // Also get the proper scale data.
+            this.scaleData = (await OBR.scene.grid.getScale());
         });
+
+        // Set the initial data (the change event won't fire if the scene has already loaded).
+        if (await OBR.scene.isReady()) {
+            const promises = {
+                dpi: OBR.scene.grid.getDpi(),
+                measurement: OBR.scene.grid.getMeasurement(),
+                scale: OBR.scene.grid.getScale(),
+                style: {
+                    lineType: OBR.scene.grid.getLineType(),
+                    lineOpacity: OBR.scene.grid.getOpacity(),
+                    lineColor: OBR.scene.grid.getColor(),
+                },
+                type: OBR.scene.grid.getType(),
+            };
+            this.gridData = {
+                dpi: await promises.dpi,
+                measurement: await promises.measurement,
+                scale: (await promises.scale).raw,
+                style: {
+                    lineType: await promises.style.lineType,
+                    lineOpacity: await promises.style.lineOpacity,
+                    lineColor: await promises.style.lineColor,
+                },
+                type: await promises.type,
+            };
+            this.scaleData = await promises.scale;
+        }
     }
 
     static getInstance (): Grid {
