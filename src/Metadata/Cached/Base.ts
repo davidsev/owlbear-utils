@@ -26,7 +26,6 @@ export abstract class BaseCachedMetadata<T> {
         this.readyPromise = new Promise<void>((resolve) => {
             this.mapper.get().then((metadata) => {
                 this.metadata = metadata;
-                console.log('metadata', metadata);
                 resolve();
             });
         });
