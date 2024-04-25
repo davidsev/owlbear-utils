@@ -53,9 +53,7 @@ export abstract class BaseCachedMetadata<T> {
         if (typeof keyOrData === 'string') {
             keyOrData = { [keyOrData]: value } as T;
         }
-        return this.mapper.set(keyOrData as T).then((metadata) => {
-            this.metadata = metadata;
-            return metadata;
-        });
+        this.metadata = { ...this.metadata, ...keyOrData as T };
+        return this.mapper.set(keyOrData as T);
     }
 }
