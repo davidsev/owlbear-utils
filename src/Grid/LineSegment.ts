@@ -22,7 +22,7 @@ export class LineSegment {
     }
 
     public toString (precision: number = 0): string {
-        const fmt = (n: number) => n.toFixed(precision).replace(/\.?0+$/, '');
+        const fmt = (n: number) => n.toFixed(precision).replace(/\.0+$/, '');
         return `Line(${fmt(this.p1.x)},${fmt(this.p1.y)} -> ${fmt(this.p2.x)},${fmt(this.p2.y)})`;
     }
 
