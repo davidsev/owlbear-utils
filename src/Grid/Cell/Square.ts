@@ -70,9 +70,9 @@ export class Square extends Cell {
     }
 
     public containsPoint (point: Vector2): boolean {
-        return point.x >= this.center.x &&
-            point.x <= this.center.x &&
-            point.y >= this.center.y &&
-            point.y <= this.center.y;
+        return point.x >= this.center.x - grid.dpi / 2 &&
+            point.x < this.center.x + grid.dpi / 2 &&
+            point.y >= this.center.y - grid.dpi / 2 &&
+            point.y < this.center.y + grid.dpi / 2;
     }
 }
