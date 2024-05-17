@@ -13,6 +13,7 @@ export class Grid implements BaseGrid {
     private gridData?: BaseGrid;
     private scaleData?: GridScale;
     private static instance: Grid;
+    private readyPromises: (() => void)[] = [];
 
     /** Sets up the event listener, and resolves once the first data is loaded. */
     public async init () {
@@ -23,6 +24,9 @@ export class Grid implements BaseGrid {
             this.gridData = gridData;
             // Also get the proper scale data.
             this.scaleData = (await OBR.scene.grid.getScale());
+
+            this.readyPromises.forEach(resolve => resolve());
+            this.readyPromises = [];
         });
 
         // Set the initial data (the change event won't fire if the scene has already loaded).
@@ -50,7 +54,18 @@ export class Grid implements BaseGrid {
                 type: await promises.type,
             };
             this.scaleData = await promises.scale;
+
+            this.readyPromises.forEach(resolve => resolve());
+            this.readyPromises = [];
         }
+    }
+
+    public async awaitReady () {
+        if (this.gridData)
+            return Promise.resolve();
+        return new Promise<void>(resolve => {
+            this.readyPromises.push(resolve);
+        });
     }
 
     static getInstance (): Grid {
