@@ -27,5 +27,7 @@ export abstract class Cell {
     }
 
     public abstract containsPoint (point: Vector2): boolean ;
+
+    public abstract neighbors (include_corners: boolean): Cell[];
 }
 

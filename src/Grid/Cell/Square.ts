@@ -75,4 +75,18 @@ export class Square extends Cell {
             point.y >= this.center.y - grid.dpi / 2 &&
             point.y < this.center.y + grid.dpi / 2;
     }
+
+    public neighbors (include_corners: boolean): Square[] {
+        const neighbors: Square[] = [];
+        for (let x = -grid.dpi; x <= grid.dpi; x += grid.dpi) {
+            for (let y = -grid.dpi; y <= grid.dpi; y += grid.dpi) {
+                if (x === 0 && y === 0)
+                    continue;
+                if (!include_corners && Math.abs(x) === Math.abs(y))
+                    continue;
+                neighbors.push(Square.fromCoords(this.center.add({ x, y })));
+            }
+        }
+        return neighbors;
+    }
 }

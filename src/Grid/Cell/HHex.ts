@@ -74,4 +74,17 @@ export class HHex extends BaseHex {
         const Cell = HHex.fromCoords(point);
         return this.center.equals(Cell.center);
     }
+
+    public neighbors (include_corners: boolean): HHex[] {
+        const [q, r] = xy_to_axial_h(this.center.x, this.center.y);
+
+        return [
+            new HHex(new Point(...axial_to_xy_h(q + 1, r))),
+            new HHex(new Point(...axial_to_xy_h(q - 1, r))),
+            new HHex(new Point(...axial_to_xy_h(q, r + 1))),
+            new HHex(new Point(...axial_to_xy_h(q, r - 1))),
+            new HHex(new Point(...axial_to_xy_h(q + 1, r - 1))),
+            new HHex(new Point(...axial_to_xy_h(q - 1, r + 1))),
+        ];
+    }
 }

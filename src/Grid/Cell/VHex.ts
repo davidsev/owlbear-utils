@@ -72,4 +72,17 @@ export class VHex extends BaseHex {
         const Cell = VHex.fromCoords(point);
         return this.center.equals(Cell.center);
     }
+
+    public neighbors (include_corners: boolean): VHex[] {
+        const [q, r] = xy_to_axial_v(this.center.x, this.center.y);
+
+        return [
+            new VHex(new Point(...axial_to_xy_v(q + 1, r))),
+            new VHex(new Point(...axial_to_xy_v(q - 1, r))),
+            new VHex(new Point(...axial_to_xy_v(q, r + 1))),
+            new VHex(new Point(...axial_to_xy_v(q, r - 1))),
+            new VHex(new Point(...axial_to_xy_v(q + 1, r - 1))),
+            new VHex(new Point(...axial_to_xy_v(q - 1, r + 1))),
+        ];
+    }
 }
