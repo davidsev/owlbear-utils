@@ -23,6 +23,18 @@ export class HHex extends BaseHex {
         return new HHex({ x: x - (grid.hexRadius / 2), y });
     }
 
+    static fromAxial (q: number, r: number): HHex {
+        const [round_q, round_r] = axial_round(q, r);
+        const [x, y] = axial_to_xy_h(round_q, round_r);
+
+        return new HHex({ x: x - (grid.hexRadius / 2), y });
+    }
+
+    get axialCoords (): [q: number, r: number, s: number] {
+        const [q, r] = xy_to_axial_h(this.center.x, this.center.y);
+        return [q, r, -q - r];
+    }
+
     get corners (): Point[] {
         return [
             this.center.add({ x: -grid.hexRadius, y: 0 }),

@@ -13,7 +13,10 @@ export abstract class BaseHex extends Cell {
 
     public nearestPointOnEdge (point: Vector2): Point {
         const nearestCorner = Point.nearestPoint(point, this.corners);
-        const secondNearestCorner = Point.nearestPoint(point, this.corners.filter((corner) => corner.distanceTo(nearestCorner) > 5));
+        const secondNearestCorner = Point.nearestPoint(
+            point,
+            this.corners.filter((corner) => corner.distanceTo(nearestCorner) > 5),
+        );
 
         // Line 1 is nearestCorner to nextNearestCorner
         const x1 = nearestCorner.x;
@@ -33,4 +36,6 @@ export abstract class BaseHex extends Cell {
             y: ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)),
         });
     }
+
+    abstract get axialCoords (): [q: number, r: number, s: number];
 }

@@ -1,7 +1,7 @@
 import { Point } from '../Point';
 import { Vector2 } from '@owlbear-rodeo/sdk';
 import { Cell, grid } from '../../index';
-import { axial_round, axial_to_xy_v, xy_to_axial_v } from '../HexFunctions';
+import { axial_round, axial_to_xy_h, axial_to_xy_v, xy_to_axial_v } from '../HexFunctions';
 import { BaseHex } from './BaseHex';
 
 export class VHex extends BaseHex {
@@ -19,6 +19,18 @@ export class VHex extends BaseHex {
         const [x, y] = axial_to_xy_v(round_q, round_r);
 
         return new VHex({ x, y: y - (grid.hexRadius / 2) });
+    }
+
+    static fromAxial (q: number, r: number): VHex {
+        const [round_q, round_r] = axial_round(q, r);
+        const [x, y] = axial_to_xy_h(round_q, round_r);
+
+        return new VHex({ x: x - (grid.hexRadius / 2), y });
+    }
+
+    get axialCoords (): [q: number, r: number, s: number] {
+        const [q, r] = xy_to_axial_v(this.center.x, this.center.y);
+        return [q, r, -q - r];
     }
 
     get corners (): Point[] {

@@ -218,9 +218,9 @@ export class Grid implements BaseGrid {
         if (points[0] instanceof Square)
             return Square.iterateCellsBoundingPoints(points) as T[];
         if (this.gridData.type === 'HEX_VERTICAL')
-            return VHex.iterateCellsBoundingPoints(points) as T[];
+            return VHex.iterateCellsBoundingPoints(points as VHex[]) as T[];
         if (this.gridData.type === 'HEX_HORIZONTAL')
-            return HHex.iterateCellsBoundingPoints(points) as T[];
+            return HHex.iterateCellsBoundingPoints(points as HHex[]) as T[];
 
         throw new Error(`Grid type "${this.gridData.type}" not supported`);
     }
