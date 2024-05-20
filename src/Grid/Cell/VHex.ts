@@ -25,7 +25,7 @@ export class VHex extends BaseHex {
         const [round_q, round_r] = axial_round(q, r);
         const [x, y] = axial_to_xy_v(round_q, round_r);
 
-        return new VHex({ x: x - (grid.hexRadius / 2), y });
+        return new VHex({ x: x, y: y - (grid.hexRadius / 2) });
     }
 
     get axialCoords (): [q: number, r: number, s: number] {
