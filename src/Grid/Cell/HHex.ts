@@ -47,7 +47,7 @@ export class HHex extends BaseHex {
     }
 
     public toString (): string {
-        return `VHex${this.center}`;
+        return `HHex${this.center}`;
     }
 
     isAdjacent (other: Cell): boolean {
