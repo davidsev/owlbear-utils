@@ -1,5 +1,12 @@
 import { Vector2 } from '@owlbear-rodeo/sdk';
 
+/** Clean -0 to be 0, so toString and other comparisons work as expected. */
+function cleanZero (value: number): number {
+    if (Math.abs(value) < 0.000000001)
+        return 0;
+    return value;
+}
+
 /** A point in 2D space. */
 export class Point implements Vector2 {
 
@@ -10,11 +17,11 @@ export class Point implements Vector2 {
     constructor (x: number, y: number);
     constructor (...arr: any[]) {
         if (arr.length === 1 && typeof arr[0] === 'object') {
-            this.x = arr[0].x;
-            this.y = arr[0].y;
+            this.x = cleanZero(arr[0].x);
+            this.y = cleanZero(arr[0].y);
         } else if (arr.length === 2 && typeof arr[0] === 'number' && typeof arr[1] === 'number') {
-            this.x = arr[0];
-            this.y = arr[1];
+            this.x = cleanZero(arr[0]);
+            this.y = cleanZero(arr[1]);
         } else
             throw new Error('Invalid arguments to Point constructor');
     }
