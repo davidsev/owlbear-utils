@@ -14,9 +14,10 @@ export abstract class Cell {
 
     public get edges (): LineSegment[] {
         const lines: LineSegment[] = [];
-        for (let i = 0; i < this.corners.length; i++) {
-            const p1 = this.corners[i];
-            const p2 = this.corners[(i + 1) % this.corners.length];
+        const corners = this.corners;
+        for (let i = 0; i < corners.length; i++) {
+            const p1 = corners[i];
+            const p2 = corners[(i + 1) % corners.length];
             lines.push(new LineSegment(p1, p2));
         }
         return lines;
