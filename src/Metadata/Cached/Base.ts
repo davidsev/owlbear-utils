@@ -3,8 +3,6 @@ import { BaseMetadataMapper } from '../Base';
 
 export abstract class BaseCachedMetadata<T> {
 
-    public readonly key: string;
-    public readonly defaultValues: T;
     private metadata: T;
     private readonly mapper: BaseMetadataMapper<T>;
     private readonly readyPromise: Promise<void>;
@@ -13,12 +11,8 @@ export abstract class BaseCachedMetadata<T> {
     constructor (mapper: BaseMetadataMapper<T>);
     constructor (keyOrMetadataMapper: string | BaseMetadataMapper<T>, defaultValuesOrNothing?: T) {
         if (keyOrMetadataMapper instanceof BaseMetadataMapper) {
-            this.key = keyOrMetadataMapper.key;
-            this.defaultValues = keyOrMetadataMapper.defaultValues;
             this.mapper = keyOrMetadataMapper;
         } else if (typeof defaultValuesOrNothing !== 'undefined') {
-            this.key = keyOrMetadataMapper;
-            this.defaultValues = defaultValuesOrNothing as T;
             this.mapper = this.createMapper(keyOrMetadataMapper, defaultValuesOrNothing);
         } else {
             throw new Error('Invalid arguments');
@@ -39,6 +33,14 @@ export abstract class BaseCachedMetadata<T> {
                 resolve();
             });
         });
+    }
+
+    public get key (): string {
+        return this.mapper.key;
+    }
+
+    public get defaultValues (): T {
+        return this.mapper.defaultValues;
     }
 
     protected abstract setupEvent (callback: (metadata: Metadata) => void): void;
