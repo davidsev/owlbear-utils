@@ -8,13 +8,18 @@ export class ItemMetadataMapper<T> {
         public readonly defaultValues: T,
     ) { }
 
-    public clean (values: Metadata): T {
+    public setDefaultValues (values: Metadata): T {
         return cleanMetadata(values, this.defaultValues);
+    }
+
+    /** @deprecated renamed to setDefaultValues instead */
+    public clean (values: Metadata): T {
+        return this.setDefaultValues(values);
     }
 
     get (item: Item): T {
         const myMetadata = (item.metadata[this.key] || {}) as Metadata;
-        return this.clean(myMetadata);
+        return this.setDefaultValues(myMetadata);
     }
 
     set (item: Item, newMetadata: Partial<T>): T {

@@ -9,24 +9,41 @@ export abstract class BaseMetadataMapper<T> {
         public readonly defaultValues: T,
     ) { }
 
-    public clean (values: Metadata): T {
+    public setDefaultValues (values: Metadata): T {
         return cleanMetadata(values, this.defaultValues);
+    }
+
+    /** @deprecated renamed to setDefaultValues instead */
+    public clean (values: Metadata): T {
+        return this.setDefaultValues(values);
+    }
+
+    public cleanRawMetadata (rawMetadata: Metadata): T {
+        return this.setDefaultValues(this.transformLoadingValues(rawMetadata));
     }
 
     protected abstract getRawMetadata (): Promise<Metadata>;
 
     protected abstract setRawMetadata (newMetadata: Metadata): Promise<void>;
 
+    protected transformLoadingValues (values: Metadata): Metadata {
+        return values;
+    }
+
+    protected transformSavingValues (values: Metadata): Metadata {
+        return values;
+    }
+
     async get (): Promise<T> {
         await awaitReady();
-        return this.clean(await this.getRawMetadata());
+        return this.cleanRawMetadata(await this.getRawMetadata());
     }
 
     async set (newMetadata: Partial<T>): Promise<T> {
         await awaitReady();
         const currentMetadata = await this.get();
         const combinedMetadata = { ...currentMetadata, ...newMetadata };
-        await this.setRawMetadata(combinedMetadata);
+        await this.setRawMetadata(this.transformSavingValues(combinedMetadata));
         return combinedMetadata;
     }
 }
