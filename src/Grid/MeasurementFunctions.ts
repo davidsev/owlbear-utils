@@ -2,45 +2,77 @@ import { grid, Point } from '../index';
 import { xy_to_axial_h, xy_to_axial_v } from './HexFunctions';
 
 export const Measure = {
-    euclidean: function euclidean (a: Point, b: Point): number {
-        const aGrid = a.div(grid.dpi);
-        const bGrid = b.div(grid.dpi);
-        return aGrid.distanceTo(bGrid);
+    euclidean: function euclidean (points: Point[]): number {
+        const gridPoints = points.map(p => p.div(grid.dpi));
+        let distance = 0;
+        for (let i = 1; i < gridPoints.length; i++) {
+            distance += gridPoints[i].distanceTo(gridPoints[i - 1]);
+        }
+        return distance;
     },
 
-    chebyshevSquare: function chebyshevSquare (a: Point, b: Point): number {
-        const aGrid = a.div(grid.dpi);
-        const bGrid = b.div(grid.dpi);
-        return Math.max(Math.abs(aGrid.x - bGrid.x), Math.abs(aGrid.y - bGrid.y));
+    chebyshevSquare: function chebyshevSquare (points: Point[]): number {
+        const gridPoints = points.map(p => p.div(grid.dpi));
+        let distance = 0;
+        for (let i = 1; i < gridPoints.length; i++) {
+            const a = gridPoints[i];
+            const b = gridPoints[i - 1];
+            distance += Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+        }
+        return distance;
     },
 
-    chebyshevVHex: function chebyshevHex (a: Point, b: Point): number {
-        const [aq, ar] = xy_to_axial_v(a.x, a.y);
-        const as = -aq - ar;
-        const [bq, br] = xy_to_axial_v(b.x, b.y);
-        const bs = -bq - br;
-        return Math.max(Math.abs(aq - bq), Math.abs(ar - br), Math.abs(as - bs));
+    chebyshevVHex: function chebyshevHex (points: Point[]): number {
+        const gridPoints = points.map(p => {
+            const [q, r] = xy_to_axial_v(p.x, p.y);
+            return { q, r, s: -q - r };
+        });
+        console.log(gridPoints);
+        let distance = 0;
+        for (let i = 1; i < gridPoints.length; i++) {
+            const a = gridPoints[i];
+            const b = gridPoints[i - 1];
+            distance += Math.max(Math.abs(a.q - b.q), Math.abs(a.r - b.r), Math.abs(a.s - b.s));
+        }
+        return distance;
     },
 
-    chebyshevHHex: function chebyshevHex (a: Point, b: Point): number {
-        const [aq, ar] = xy_to_axial_h(a.x, a.y);
-        const as = -aq - ar;
-        const [bq, br] = xy_to_axial_h(b.x, b.y);
-        const bs = -bq - br;
-        return Math.max(Math.abs(aq - bq), Math.abs(ar - br), Math.abs(as - bs));
+    chebyshevHHex: function chebyshevHex (points: Point[]): number {
+        const gridPoints = points.map(p => {
+            const [q, r] = xy_to_axial_h(p.x, p.y);
+            return { q, r, s: -q - r };
+        });
+        console.log(gridPoints);
+        let distance = 0;
+        for (let i = 1; i < gridPoints.length; i++) {
+            const a = gridPoints[i];
+            const b = gridPoints[i - 1];
+            distance += Math.max(Math.abs(a.q - b.q), Math.abs(a.r - b.r), Math.abs(a.s - b.s));
+        }
+        return distance;
     },
 
-    manhattanSquare: function manhattanSquare (a: Point, b: Point): number {
-        const aGrid = a.div(grid.dpi);
-        const bGrid = b.div(grid.dpi);
-        return Math.abs(aGrid.x - bGrid.x) + Math.abs(aGrid.y - bGrid.y);
+    manhattanSquare: function manhattanSquare (points: Point[]): number {
+        const gridPoints = points.map(p => p.div(grid.dpi));
+        let distance = 0;
+        for (let i = 1; i < gridPoints.length; i++) {
+            const a = gridPoints[i];
+            const b = gridPoints[i - 1];
+            distance += Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+        }
+        return distance;
     },
 
-    alternatingSquare: function alternatingSquare (a: Point, b: Point): number {
-        const aGrid = a.div(grid.dpi);
-        const bGrid = b.div(grid.dpi);
-        const big = Math.max(Math.abs(aGrid.x - bGrid.x), Math.abs(aGrid.y - bGrid.y));
-        const small = Math.min(Math.abs(aGrid.x - bGrid.x), Math.abs(aGrid.y - bGrid.y));
+    alternatingSquare: function alternatingSquare (points: Point[]): number {
+        const gridPoints = points.map(p => p.div(grid.dpi));
+        let big = 0;
+        let small = 0;
+        for (let i = 1; i < gridPoints.length; i++) {
+            const a = gridPoints[i];
+            const b = gridPoints[i - 1];
+            big += Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+            small += Math.min(Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+        }
         return big + Math.floor(small / 2);
     },
 };

@@ -163,33 +163,24 @@ export class Grid implements BaseGrid {
     }
 
     /** Returns the distance between two point, measured in grid cells. */
-    public measure (a: Cell | Vector2, b: Cell | Vector2): number {
+    public measure (...points: (Cell | Vector2)[]): number {
         if (!this.gridData)
             throw new Error('Grid data not loaded yet');
 
-        let pointA: Point;
-        if (a instanceof Cell)
-            pointA = a.center;
-        else
-            pointA = new Point(a);
-        let pointB: Point;
-        if (b instanceof Cell)
-            pointB = b.center;
-        else
-            pointB = new Point(b);
+        const cleanPoints = points.map(p => p instanceof Cell ? p.center : new Point(p));
 
         if (this.gridData.measurement == 'EUCLIDEAN')
-            return Measure.euclidean(pointA, pointB);
+            return Measure.euclidean(cleanPoints);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'CHEBYSHEV')
-            return Measure.chebyshevSquare(pointA, pointB);
+            return Measure.chebyshevSquare(cleanPoints);
         if (this.gridData.type === 'HEX_VERTICAL' && this.gridData.measurement === 'CHEBYSHEV')
-            return Measure.chebyshevVHex(pointA, pointB);
+            return Measure.chebyshevVHex(cleanPoints);
         if (this.gridData.type === 'HEX_HORIZONTAL' && this.gridData.measurement === 'CHEBYSHEV')
-            return Measure.chebyshevHHex(pointA, pointB);
+            return Measure.chebyshevHHex(cleanPoints);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'MANHATTAN')
-            return Measure.manhattanSquare(pointA, pointB);
+            return Measure.manhattanSquare(cleanPoints);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'ALTERNATING')
-            return Measure.alternatingSquare(pointA, pointB);
+            return Measure.alternatingSquare(cleanPoints);
 
         return 0;
     }
