@@ -27,7 +27,6 @@ export const Measure = {
             const [q, r] = xy_to_axial_v(p.x, p.y);
             return { q, r, s: -q - r };
         });
-        console.log(gridPoints);
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -42,7 +41,6 @@ export const Measure = {
             const [q, r] = xy_to_axial_h(p.x, p.y);
             return { q, r, s: -q - r };
         });
-        console.log(gridPoints);
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
