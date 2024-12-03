@@ -39,6 +39,7 @@ export class Grid implements BaseGrid {
                     lineType: OBR.scene.grid.getLineType(),
                     lineOpacity: OBR.scene.grid.getOpacity(),
                     lineColor: OBR.scene.grid.getColor(),
+                    lineWidth: OBR.scene.grid.getLineWidth(),
                 },
                 type: OBR.scene.grid.getType(),
             };
@@ -50,6 +51,7 @@ export class Grid implements BaseGrid {
                     lineType: await promises.style.lineType,
                     lineOpacity: await promises.style.lineOpacity,
                     lineColor: await promises.style.lineColor,
+                    lineWidth: await promises.style.lineWidth,
                 },
                 type: await promises.type,
             };
