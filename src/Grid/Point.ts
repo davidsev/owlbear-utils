@@ -80,10 +80,13 @@ export class Point implements Vector2 {
         });
     }
 
-    public roundToNearest (n: number): Point {
+    public roundToNearest (roundTo: Vector2): Point ;
+    public roundToNearest (roundTo: number): Point ;
+    public roundToNearest (roundTo: number | Vector2): Point {
+        const n = typeof roundTo === 'number' ? { x: roundTo, y: roundTo } : roundTo;
         return new Point({
-            x: Math.round(this.x / n) * n,
-            y: Math.round(this.y / n) * n,
+            x: Math.round(this.x / n.x) * n.x,
+            y: Math.round(this.y / n.y) * n.y,
         });
     }
 

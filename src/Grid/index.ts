@@ -6,6 +6,8 @@ import { VHex } from './Cell/VHex';
 import { Point } from './Point';
 import { HHex } from './Cell/HHex';
 import { Measure } from './MeasurementFunctions';
+import { Isometric } from './Cell/Isometric';
+import { Dimetric } from './Cell/Dimetric';
 
 const SQRT3 = Math.sqrt(3);
 
@@ -132,6 +134,10 @@ export class Grid implements BaseGrid {
             return VHex.fromCoords(point);
         if (this.gridData.type === 'HEX_HORIZONTAL')
             return HHex.fromCoords(point);
+        if (this.gridData.type === 'ISOMETRIC')
+            return Isometric.fromCoords(point);
+        if (this.gridData.type === 'DIMETRIC')
+            return Dimetric.fromCoords(point);
 
         throw new Error(`Grid type "${this.gridData.type}" not supported`);
     }
@@ -179,10 +185,22 @@ export class Grid implements BaseGrid {
             return Measure.chebyshevVHex(cleanPoints);
         if (this.gridData.type === 'HEX_HORIZONTAL' && this.gridData.measurement === 'CHEBYSHEV')
             return Measure.chebyshevHHex(cleanPoints);
+        if (this.gridData.type === 'ISOMETRIC' && this.gridData.measurement === 'CHEBYSHEV')
+            return Measure.chebyshevIsometric(cleanPoints);
+        if (this.gridData.type === 'DIMETRIC' && this.gridData.measurement === 'CHEBYSHEV')
+            return Measure.chebyshevDimetric(cleanPoints);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'MANHATTAN')
             return Measure.manhattanSquare(cleanPoints);
+        if (this.gridData.type === 'ISOMETRIC' && this.gridData.measurement === 'MANHATTAN')
+            return Measure.manhattanIsometric(cleanPoints);
+        if (this.gridData.type === 'DIMETRIC' && this.gridData.measurement === 'MANHATTAN')
+            return Measure.manhattanDimetric(cleanPoints);
         if (this.gridData.type === 'SQUARE' && this.gridData.measurement === 'ALTERNATING')
             return Measure.alternatingSquare(cleanPoints);
+        if (this.gridData.type === 'ISOMETRIC' && this.gridData.measurement === 'ALTERNATING')
+            return Measure.alternatingIsometric(cleanPoints);
+        if (this.gridData.type === 'DIMETRIC' && this.gridData.measurement === 'ALTERNATING')
+            return Measure.alternatingDimetric(cleanPoints);
 
         return 0;
     }
@@ -214,6 +232,10 @@ export class Grid implements BaseGrid {
             return VHex.iterateCellsBoundingPoints(points as VHex[]) as T[];
         if (this.gridData.type === 'HEX_HORIZONTAL')
             return HHex.iterateCellsBoundingPoints(points as HHex[]) as T[];
+        if (this.gridData.type === 'ISOMETRIC')
+            return Isometric.iterateCellsBoundingPoints(points as Isometric[]) as T[];
+        if (this.gridData.type === 'DIMETRIC')
+            return Dimetric.iterateCellsBoundingPoints(points as Dimetric[]) as T[];
 
         throw new Error(`Grid type "${this.gridData.type}" not supported`);
     }
