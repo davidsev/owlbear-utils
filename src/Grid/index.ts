@@ -219,7 +219,7 @@ export class Grid implements BaseGrid {
             return SnapTo.CORNER;
     }
 
-    public iterateCellsBoundingPoints<T extends (Square | VHex | HHex)> (points: T[]): T[] {
+    public iterateCellsBoundingPoints<T extends (Square | VHex | HHex | Isometric | Dimetric)> (points: T[]): T[] {
         if (!this.gridData)
             throw new Error('Grid data not loaded yet');
 
