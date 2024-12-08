@@ -96,4 +96,8 @@ export class Dimetric extends BaseAxonometric {
         const Cell = Dimetric.fromCoords(point);
         return this.center.equals(Cell.center);
     }
+
+    public get axonometricCoords (): [u: number, v: number] {
+        return xy_to_uv_dimetric(this.center.x, this.center.y);
+    }
 }
