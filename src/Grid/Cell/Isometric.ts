@@ -84,7 +84,7 @@ export class Isometric extends BaseAxonometric {
         const cells: Isometric[] = [];
         for (let u = Math.floor(uMin); u <= Math.ceil(uMax); u++) {
             for (let v = Math.floor(vMin); v <= Math.ceil(vMax); v++) {
-                const [x, y] = uv_to_xy_isometric(v, u);
+                const [x, y] = uv_to_xy_isometric(u, v);
                 cells.push(Isometric.fromCoords({ x, y }));
             }
         }

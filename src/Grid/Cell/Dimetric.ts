@@ -84,7 +84,7 @@ export class Dimetric extends BaseAxonometric {
         const cells: Dimetric[] = [];
         for (let u = Math.floor(uMin); u <= Math.ceil(uMax); u++) {
             for (let v = Math.floor(vMin); v <= Math.ceil(vMax); v++) {
-                const [x, y] = uv_to_xy_dimetric(v, u);
+                const [x, y] = uv_to_xy_dimetric(u, v);
                 cells.push(Dimetric.fromCoords({ x, y }));
             }
         }
