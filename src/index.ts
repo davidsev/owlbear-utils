@@ -1,5 +1,5 @@
 import OBR from '@owlbear-rodeo/sdk';
-import { Grid } from './Grid';
+import { LiveGrid } from './Grid/LiveGrid';
 
 export { Point } from './Grid/Point';
 export { LineSegment } from './Grid/LineSegment';
@@ -12,7 +12,8 @@ export { BaseAxonometric } from './Grid/Cell/BaseAxonometric';
 export { Isometric } from './Grid/Cell/Isometric';
 export { Dimetric } from './Grid/Cell/Dimetric';
 export { SnapTo } from './Grid/SnapTo';
-export { Grid };
+export { Grid } from './Grid/Grid';
+export { LiveGrid } from './Grid/LiveGrid';
 export { ToolMetadataMapper } from './Metadata/Tool';
 export { RoomMetadataMapper } from './Metadata/Room';
 export { ItemMetadataMapper } from './Metadata/Item';
@@ -23,7 +24,7 @@ export { CachedRoomMetadata } from './Metadata/Cached/Room';
 export { CachedSceneMetadata } from './Metadata/Cached/Scene';
 export { awaitReady } from './awaitReady';
 
-export const grid = Grid.getInstance();
+export const grid = new LiveGrid();
 
 OBR.onReady(() => {
     grid.init();

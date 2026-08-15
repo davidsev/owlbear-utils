@@ -1,13 +1,14 @@
 import { Cell } from './Cell';
 import { Vector2 } from '@owlbear-rodeo/sdk';
 import { Point } from '../Point';
+import type { Grid } from '../Grid';
 
 export abstract class BaseAxonometric extends Cell {
 
     public readonly center: Point;
 
-    constructor (center: Vector2) {
-        super();
+    constructor (center: Vector2, grid: Grid) {
+        super(grid);
         this.center = new Point(center);
     }
 

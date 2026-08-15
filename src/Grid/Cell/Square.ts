@@ -1,24 +1,21 @@
 import { Cell } from './Cell';
 import { Point } from '../Point';
-import { grid } from '../../index';
 import { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Grid } from '../Grid';
 
 export class Square extends Cell {
 
     public readonly center: Point;
 
-    constructor (center: Vector2) {
-        super();
+    constructor (center: Vector2, grid: Grid) {
+        super(grid);
+        if (grid.type !== 'SQUARE')
+            throw new Error(`Cannot create a Square cell for a "${grid.type}" grid`);
         this.center = new Point(center);
     }
 
-    static fromCoords (point: Vector2): Square {
-        const halfDpi = { x: grid.dpi / 2, y: grid.dpi / 2 };
-        return new Square((new Point(point)).add(halfDpi).roundToNearest(grid.dpi).sub(halfDpi));
-    }
-
     get corners (): Point[] {
-        const halfDpi = grid.dpi / 2;
+        const halfDpi = this.grid.dpi / 2;
         return [
             this.center.add({ x: -halfDpi, y: -halfDpi }),
             this.center.add({ x: +halfDpi, y: -halfDpi }),
@@ -32,10 +29,10 @@ export class Square extends Cell {
     }
 
     public nearestPointOnEdge (point: Vector2): Point {
-        const minX = this.center.x - (grid.dpi / 2);
-        const maxX = this.center.x + (grid.dpi / 2);
-        const minY = this.center.y - (grid.dpi / 2);
-        const maxY = this.center.y + (grid.dpi / 2);
+        const minX = this.center.x - (this.grid.dpi / 2);
+        const maxX = this.center.x + (this.grid.dpi / 2);
+        const minY = this.center.y - (this.grid.dpi / 2);
+        const maxY = this.center.y + (this.grid.dpi / 2);
 
         const points = [
             { x: minX, y: point.y },
@@ -50,41 +47,25 @@ export class Square extends Cell {
     isAdjacent (other: Cell): boolean {
         const xDiff = Math.abs(this.center.x - other.center.x);
         const yDiff = Math.abs(this.center.y - other.center.y);
-        return (xDiff === grid.dpi && yDiff === 0) || (xDiff === 0 && yDiff === grid.dpi);
-    }
-
-    public static iterateCellsBoundingPoints (points: Square[]): Square[] {
-        const xMin = Math.min(...points.map(point => point.center.x));
-        const xMax = Math.max(...points.map(point => point.center.x));
-        const yMin = Math.min(...points.map(point => point.center.y));
-        const yMax = Math.max(...points.map(point => point.center.y));
-
-        const cells: Square[] = [];
-        for (let x = Math.floor(xMin); x <= Math.ceil(xMax); x += grid.dpi) {
-            for (let y = Math.floor(yMin); y <= Math.ceil(yMax); y += grid.dpi) {
-                cells.push(Square.fromCoords({ x, y }));
-            }
-        }
-
-        return cells;
+        return (xDiff === this.grid.dpi && yDiff === 0) || (xDiff === 0 && yDiff === this.grid.dpi);
     }
 
     public containsPoint (point: Vector2): boolean {
-        return point.x >= this.center.x - grid.dpi / 2 &&
-            point.x < this.center.x + grid.dpi / 2 &&
-            point.y >= this.center.y - grid.dpi / 2 &&
-            point.y < this.center.y + grid.dpi / 2;
+        return point.x >= this.center.x - this.grid.dpi / 2 &&
+            point.x < this.center.x + this.grid.dpi / 2 &&
+            point.y >= this.center.y - this.grid.dpi / 2 &&
+            point.y < this.center.y + this.grid.dpi / 2;
     }
 
     public neighbors (include_corners: boolean): Square[] {
         const neighbors: Square[] = [];
-        for (let x = -grid.dpi; x <= grid.dpi; x += grid.dpi) {
-            for (let y = -grid.dpi; y <= grid.dpi; y += grid.dpi) {
+        for (let x = -this.grid.dpi; x <= this.grid.dpi; x += this.grid.dpi) {
+            for (let y = -this.grid.dpi; y <= this.grid.dpi; y += this.grid.dpi) {
                 if (x === 0 && y === 0)
                     continue;
                 if (!include_corners && Math.abs(x) === Math.abs(y))
                     continue;
-                neighbors.push(Square.fromCoords(this.center.add({ x, y })));
+                neighbors.push(this.grid.getCell(this.center.add({ x, y })) as Square);
             }
         }
         return neighbors;

@@ -1,48 +1,38 @@
 import { Point } from '../Point';
 import { Vector2 } from '@owlbear-rodeo/sdk';
-import { Cell, grid } from '../../index';
+import { Cell } from './Cell';
 import { axial_round, axial_to_xy_h, xy_to_axial_h } from '../HexFunctions';
 import { BaseHex } from './BaseHex';
-
-const SQRT3 = Math.sqrt(3);
+import type { Grid } from '../Grid';
 
 export class HHex extends BaseHex {
 
-    static fromCoords (point: Vector2): HHex {
-
-        // OBR has 0,0 not in the center of a hex, so offset by half a hex
-        const vec = new Point({
-            x: point.x + (grid.hexRadius / 2),
-            y: point.y,
-        });
-
-        const [q, r] = xy_to_axial_h(vec.x, vec.y);
-        const [round_q, round_r] = axial_round(q, r);
-        const [x, y] = axial_to_xy_h(round_q, round_r);
-
-        return new HHex({ x: x - (grid.hexRadius / 2), y });
+    constructor (center: Vector2, grid: Grid) {
+        super(center, grid);
+        if (grid.type !== 'HEX_HORIZONTAL')
+            throw new Error(`Cannot create a HHex cell for a "${grid.type}" grid`);
     }
 
-    static fromAxial (q: number, r: number): HHex {
+    static fromAxial (q: number, r: number, grid: Grid): HHex {
         const [round_q, round_r] = axial_round(q, r);
-        const [x, y] = axial_to_xy_h(round_q, round_r);
+        const [x, y] = axial_to_xy_h(round_q, round_r, grid);
 
-        return new HHex({ x: x - (grid.hexRadius / 2), y });
+        return new HHex({ x: x - (grid.hexRadius / 2), y }, grid);
     }
 
     get axialCoords (): [q: number, r: number, s: number] {
-        const [q, r] = xy_to_axial_h(this.center.x, this.center.y);
+        const [q, r] = xy_to_axial_h(this.center.x, this.center.y, this.grid);
         return [q, r, -q - r];
     }
 
     get corners (): Point[] {
         return [
-            this.center.add({ x: -grid.hexRadius, y: 0 }),
-            this.center.add({ x: -grid.hexRadius / 2, y: grid.dpi / 2 }),
-            this.center.add({ x: grid.hexRadius / 2, y: grid.dpi / 2 }),
-            this.center.add({ x: grid.hexRadius, y: 0 }),
-            this.center.add({ x: grid.hexRadius / 2, y: -grid.dpi / 2 }),
-            this.center.add({ x: -grid.hexRadius / 2, y: -grid.dpi / 2 }),
+            this.center.add({ x: -this.grid.hexRadius, y: 0 }),
+            this.center.add({ x: -this.grid.hexRadius / 2, y: this.grid.dpi / 2 }),
+            this.center.add({ x: this.grid.hexRadius / 2, y: this.grid.dpi / 2 }),
+            this.center.add({ x: this.grid.hexRadius, y: 0 }),
+            this.center.add({ x: this.grid.hexRadius / 2, y: -this.grid.dpi / 2 }),
+            this.center.add({ x: -this.grid.hexRadius / 2, y: -this.grid.dpi / 2 }),
         ];
     }
 
@@ -53,50 +43,25 @@ export class HHex extends BaseHex {
     isAdjacent (other: Cell): boolean {
         const xDiff = Math.abs(this.center.x - other.center.x);
         const yDiff = Math.abs(this.center.y - other.center.y);
-        return (Math.abs(xDiff - grid.hexRadius * 1.5) < 1 && Math.abs(yDiff - grid.dpi * 0.5) < 1)
-            || (xDiff < 1 && Math.abs(yDiff - grid.dpi) < 1);
-    }
-
-    public static iterateCellsBoundingPoints (points: HHex[]): HHex[] {
-        let rMin = Infinity;
-        let rMax = -Infinity;
-        let qMin = Infinity;
-        let qMax = -Infinity;
-
-        for (const point of points) {
-            const [q, r] = xy_to_axial_h(point.center.x, point.center.y);
-            rMin = Math.min(rMin, r);
-            rMax = Math.max(rMax, r);
-            qMin = Math.min(qMin, q);
-            qMax = Math.max(qMax, q);
-        }
-
-        const cells: HHex[] = [];
-        for (let r = Math.floor(rMin); r <= Math.ceil(rMax); r++) {
-            for (let q = Math.floor(qMin); q <= Math.ceil(qMax); q++) {
-                const [x, y] = axial_to_xy_h(q, r);
-                cells.push(HHex.fromCoords({ x, y }));
-            }
-        }
-
-        return cells;
+        return (Math.abs(xDiff - this.grid.hexRadius * 1.5) < 1 && Math.abs(yDiff - this.grid.dpi * 0.5) < 1)
+            || (xDiff < 1 && Math.abs(yDiff - this.grid.dpi) < 1);
     }
 
     public containsPoint (point: Vector2): boolean {
-        const Cell = HHex.fromCoords(point);
-        return this.center.equals(Cell.center);
+        const cell = this.grid.getCell(point);
+        return this.center.equals(cell.center);
     }
 
     public neighbors (include_corners: boolean): HHex[] {
-        const [q, r] = xy_to_axial_h(this.center.x, this.center.y);
+        const [q, r] = xy_to_axial_h(this.center.x, this.center.y, this.grid);
 
         return [
-            new HHex(new Point(...axial_to_xy_h(q + 1, r))),
-            new HHex(new Point(...axial_to_xy_h(q - 1, r))),
-            new HHex(new Point(...axial_to_xy_h(q, r + 1))),
-            new HHex(new Point(...axial_to_xy_h(q, r - 1))),
-            new HHex(new Point(...axial_to_xy_h(q + 1, r - 1))),
-            new HHex(new Point(...axial_to_xy_h(q - 1, r + 1))),
+            new HHex(new Point(...axial_to_xy_h(q + 1, r, this.grid)), this.grid),
+            new HHex(new Point(...axial_to_xy_h(q - 1, r, this.grid)), this.grid),
+            new HHex(new Point(...axial_to_xy_h(q, r + 1, this.grid)), this.grid),
+            new HHex(new Point(...axial_to_xy_h(q, r - 1, this.grid)), this.grid),
+            new HHex(new Point(...axial_to_xy_h(q + 1, r - 1, this.grid)), this.grid),
+            new HHex(new Point(...axial_to_xy_h(q - 1, r + 1, this.grid)), this.grid),
         ];
     }
 }

@@ -1,8 +1,15 @@
 import { Point } from '../Point';
 import { Vector2 } from '@owlbear-rodeo/sdk';
 import { LineSegment } from '../LineSegment';
+import type { Grid } from '../Grid';
 
 export abstract class Cell {
+
+    public readonly grid: Grid;
+
+    protected constructor (grid: Grid) {
+        this.grid = grid;
+    }
 
     public abstract get center (): Point;
 
@@ -31,4 +38,3 @@ export abstract class Cell {
 
     public abstract neighbors (include_corners: boolean): Cell[];
 }
-
