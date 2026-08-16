@@ -1,6 +1,6 @@
 import { Point } from '../Point';
-import { Vector2 } from '@owlbear-rodeo/sdk';
-import { Cell } from './Cell';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Cell } from './Cell';
 import { uv_to_xy_dimetric, xy_to_uv_dimetric } from '../AxonometricFunctions';
 import { BaseAxonometric } from './BaseAxonometric';
 import type { Grid } from '../Grid';

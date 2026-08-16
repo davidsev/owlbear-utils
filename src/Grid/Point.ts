@@ -1,4 +1,4 @@
-import { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
 
 /** Clean -0 to be 0, so toString and other comparisons work as expected. */
 function cleanZero(value: number): number {
@@ -13,6 +13,7 @@ export class Point implements Vector2 {
 
     constructor(vector: Vector2);
     constructor(x: number, y: number);
+    // biome-ignore lint/suspicious/noExplicitAny: variadic overload implementation signature, narrowed below by length/typeof checks
     constructor(...arr: any[]) {
         if (arr.length === 1 && typeof arr[0] === 'object') {
             this.x = cleanZero(arr[0].x);
@@ -100,7 +101,7 @@ export class Point implements Vector2 {
     }
 
     public distanceTo(rhs: Vector2): number {
-        return Math.sqrt(Math.pow(this.x - rhs.x, 2) + Math.pow(this.y - rhs.y, 2));
+        return Math.sqrt((this.x - rhs.x) ** 2 + (this.y - rhs.y) ** 2);
     }
 
     public equals(rhs: Vector2): boolean {

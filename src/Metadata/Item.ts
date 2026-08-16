@@ -1,4 +1,4 @@
-import { Item, Metadata } from '@owlbear-rodeo/sdk';
+import type { Item, Metadata } from '@owlbear-rodeo/sdk';
 import { cleanMetadata } from './cleanMetadata';
 
 export class ItemMetadataMapper<T> {

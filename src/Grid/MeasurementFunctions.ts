@@ -1,4 +1,4 @@
-import { Point } from './Point';
+import type { Point } from './Point';
 import { xy_to_axial_h, xy_to_axial_v } from './HexFunctions';
 import { xy_to_uv_dimetric, xy_to_uv_isometric } from './AxonometricFunctions';
 import type { Grid } from './Grid';

@@ -1,4 +1,4 @@
-import { Grid as BaseGrid, GridMeasurement, GridScale, GridStyle, GridType, Vector2 } from '@owlbear-rodeo/sdk';
+import type { Grid as BaseGrid, GridMeasurement, GridScale, GridStyle, GridType, Vector2 } from '@owlbear-rodeo/sdk';
 import { SnapTo } from './SnapTo';
 import { Cell } from './Cell/Cell';
 import { Square } from './Cell/Square';
@@ -125,7 +125,7 @@ export class Grid implements BaseGrid {
     public measure(...points: (Cell | Vector2)[]): number {
         const cleanPoints = points.map((p) => (p instanceof Cell ? p.center : new Point(p)));
 
-        if (this.measurement == 'EUCLIDEAN') return Measure.euclidean(cleanPoints, this);
+        if (this.measurement === 'EUCLIDEAN') return Measure.euclidean(cleanPoints, this);
         if (this.type === 'SQUARE' && this.measurement === 'CHEBYSHEV') return Measure.chebyshevSquare(cleanPoints, this);
         if (this.type === 'HEX_VERTICAL' && this.measurement === 'CHEBYSHEV') return Measure.chebyshevVHex(cleanPoints, this);
         if (this.type === 'HEX_HORIZONTAL' && this.measurement === 'CHEBYSHEV') return Measure.chebyshevHHex(cleanPoints, this);

@@ -1,6 +1,6 @@
 import { Cell } from './Cell';
 import { Point } from '../Point';
-import { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
 import type { Grid } from '../Grid';
 
 export class Square extends Cell {

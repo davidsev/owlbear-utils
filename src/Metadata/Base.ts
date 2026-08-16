@@ -1,4 +1,4 @@
-import { Metadata } from '@owlbear-rodeo/sdk';
+import type { Metadata } from '@owlbear-rodeo/sdk';
 import { awaitReady } from '../awaitReady';
 import { cleanMetadata } from './cleanMetadata';
 

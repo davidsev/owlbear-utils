@@ -1,5 +1,5 @@
 import { Point } from './Point';
-import { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
 
 export class LineSegment {
     public readonly p1: Point;

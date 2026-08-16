@@ -1,5 +1,5 @@
 import { RoomMetadataMapper } from '../Room';
-import OBR, { Metadata } from '@owlbear-rodeo/sdk';
+import OBR, { type Metadata } from '@owlbear-rodeo/sdk';
 import { BaseCachedMetadata } from './Base';
 
 export class CachedRoomMetadata<T> extends BaseCachedMetadata<T> {

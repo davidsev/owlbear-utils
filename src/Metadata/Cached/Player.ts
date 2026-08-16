@@ -1,4 +1,4 @@
-import OBR, { Metadata, Player } from '@owlbear-rodeo/sdk';
+import OBR, { type Metadata, type Player } from '@owlbear-rodeo/sdk';
 import { BaseCachedMetadata } from './Base';
 import { PlayerMetadataMapper } from '../Player';
 

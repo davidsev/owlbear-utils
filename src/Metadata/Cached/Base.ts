@@ -1,4 +1,4 @@
-import OBR, { Metadata } from '@owlbear-rodeo/sdk';
+import OBR, { type Metadata } from '@owlbear-rodeo/sdk';
 import { BaseMetadataMapper } from '../Base';
 
 export abstract class BaseCachedMetadata<T> {
@@ -60,7 +60,7 @@ export abstract class BaseCachedMetadata<T> {
 
     public async set(data: Partial<T>): Promise<T>;
     public async set<K extends keyof T>(key: K, value: T[K]): Promise<T>;
-    public async set(keyOrData: keyof T | Partial<T>, value?: any): Promise<T> {
+    public async set(keyOrData: keyof T | Partial<T>, value?: T[keyof T]): Promise<T> {
         if (typeof keyOrData === 'string') {
             keyOrData = { [keyOrData]: value } as T;
         }

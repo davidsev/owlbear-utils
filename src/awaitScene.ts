@@ -6,7 +6,7 @@ export async function awaitScene(): Promise<void> {
     // Make sure OBR is ready.
     await awaitReady();
 
-    return new Promise<void>(async (resolve) => {
+    return new Promise<void>((resolve) => {
         // Once the scene is ready, we need to clean up the event listener and then resolve the promise.
         let removeEventListener: ReturnType<typeof OBR.scene.onReadyChange> | null = null;
         const callbackOnceReady = () => {
@@ -21,6 +21,8 @@ export async function awaitScene(): Promise<void> {
         });
 
         // If it's already ready, then we can resolve immediately.
-        if (await OBR.scene.isReady()) callbackOnceReady();
+        OBR.scene.isReady().then((ready) => {
+            if (ready) callbackOnceReady();
+        });
     });
 }

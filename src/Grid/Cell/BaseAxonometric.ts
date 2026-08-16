@@ -1,5 +1,5 @@
 import { Cell } from './Cell';
-import { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
 import { Point } from '../Point';
 import type { Grid } from '../Grid';
 
@@ -14,7 +14,7 @@ export abstract class BaseAxonometric extends Cell {
     public nearestPointOnEdge(point: Vector2): Point {
         const nearestCorner = Point.nearestPoint(point, this.corners);
         const neighboringCorners = this.corners.filter((corner) => {
-            return corner.x != nearestCorner.x && corner.y != nearestCorner.y;
+            return corner.x !== nearestCorner.x && corner.y !== nearestCorner.y;
         });
         const secondNearestCorner = Point.nearestPoint(point, neighboringCorners);
 

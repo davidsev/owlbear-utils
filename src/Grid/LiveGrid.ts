@@ -1,13 +1,20 @@
-import OBR, { Grid as BaseGrid, GridMeasurement, GridScale, GridStyle, GridType, Vector2 } from '@owlbear-rodeo/sdk';
+import OBR, {
+    type Grid as BaseGrid,
+    type GridMeasurement,
+    type GridScale,
+    type GridStyle,
+    type GridType,
+    type Vector2,
+} from '@owlbear-rodeo/sdk';
 import { Grid } from './Grid';
-import { SnapTo } from './SnapTo';
-import { Cell } from './Cell/Cell';
-import { Square } from './Cell/Square';
-import { VHex } from './Cell/VHex';
-import { HHex } from './Cell/HHex';
-import { Isometric } from './Cell/Isometric';
-import { Dimetric } from './Cell/Dimetric';
-import { Point } from './Point';
+import type { SnapTo } from './SnapTo';
+import type { Cell } from './Cell/Cell';
+import type { Square } from './Cell/Square';
+import type { VHex } from './Cell/VHex';
+import type { HHex } from './Cell/HHex';
+import type { Isometric } from './Cell/Isometric';
+import type { Dimetric } from './Cell/Dimetric';
+import type { Point } from './Point';
 
 /** Called with the new settings whenever the grid changes. */
 export type GridChangeCallback = (grid: Grid) => void;
@@ -87,7 +94,9 @@ export class LiveGrid implements BaseGrid {
     private publish(grid: Grid): void {
         this.current = grid;
 
-        this.readyPromises.forEach((resolve) => resolve());
+        this.readyPromises.forEach((resolve) => {
+            resolve();
+        });
         this.readyPromises = [];
 
         // Copy the list, so a callback that unsubscribes doesn't disturb the iteration.

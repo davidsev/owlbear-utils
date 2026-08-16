@@ -1,6 +1,6 @@
 import { Point } from '../Point';
-import { Vector2 } from '@owlbear-rodeo/sdk';
-import { Cell } from './Cell';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Cell } from './Cell';
 import { axial_round, axial_to_xy_h, xy_to_axial_h } from '../HexFunctions';
 import { BaseHex } from './BaseHex';
 import type { Grid } from '../Grid';
@@ -52,7 +52,7 @@ export class HHex extends BaseHex {
         return this.center.equals(cell.center);
     }
 
-    public neighbors(include_corners: boolean): HHex[] {
+    public neighbors(_include_corners: boolean): HHex[] {
         const [q, r] = xy_to_axial_h(this.center.x, this.center.y, this.grid);
 
         return [

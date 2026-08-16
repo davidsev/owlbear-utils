@@ -15,7 +15,10 @@
         "lineWidth": 140
     },
     "linter": {
-        "enabled": false
+        "enabled": true,
+        "rules": {
+            "preset": "recommended"
+        }
     },
     "javascript": {
         "formatter": {

@@ -1,4 +1,4 @@
-import OBR, { Metadata } from '@owlbear-rodeo/sdk';
+import OBR, { type Metadata } from '@owlbear-rodeo/sdk';
 import { BaseMetadataMapper } from './Base';
 
 export class RoomMetadataMapper<T> extends BaseMetadataMapper<T> {

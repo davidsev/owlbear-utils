@@ -1,4 +1,4 @@
-import OBR, { Metadata } from '@owlbear-rodeo/sdk';
+import OBR, { type Metadata } from '@owlbear-rodeo/sdk';
 import { BaseCachedMetadata } from './Base';
 import { SceneMetadataMapper } from '../Scene';
 

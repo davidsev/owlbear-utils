@@ -1,5 +1,5 @@
-import { Point } from '../Point';
-import { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Point } from '../Point';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
 import { LineSegment } from '../LineSegment';
 import type { Grid } from '../Grid';
 

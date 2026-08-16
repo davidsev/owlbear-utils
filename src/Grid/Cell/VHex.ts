@@ -1,6 +1,6 @@
 import { Point } from '../Point';
-import { Vector2 } from '@owlbear-rodeo/sdk';
-import { Cell } from './Cell';
+import type { Vector2 } from '@owlbear-rodeo/sdk';
+import type { Cell } from './Cell';
 import { axial_round, axial_to_xy_v, xy_to_axial_v } from '../HexFunctions';
 import { BaseHex } from './BaseHex';
 import type { Grid } from '../Grid';
@@ -52,7 +52,7 @@ export class VHex extends BaseHex {
         return this.center.equals(cell.center);
     }
 
-    public neighbors(include_corners: boolean): VHex[] {
+    public neighbors(_include_corners: boolean): VHex[] {
         const [q, r] = xy_to_axial_v(this.center.x, this.center.y, this.grid);
 
         return [
