@@ -4,8 +4,8 @@ import { xy_to_uv_dimetric, xy_to_uv_isometric } from './AxonometricFunctions';
 import type { Grid } from './Grid';
 
 export const Measure = {
-    euclidean: function euclidean (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => p.div(grid.dpi));
+    euclidean: function euclidean(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => p.div(grid.dpi));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             distance += gridPoints[i].distanceTo(gridPoints[i - 1]);
@@ -13,8 +13,8 @@ export const Measure = {
         return distance;
     },
 
-    chebyshevSquare: function chebyshevSquare (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => p.div(grid.dpi));
+    chebyshevSquare: function chebyshevSquare(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => p.div(grid.dpi));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -24,8 +24,8 @@ export const Measure = {
         return distance;
     },
 
-    chebyshevVHex: function chebyshevHex (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => {
+    chebyshevVHex: function chebyshevHex(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => {
             const [q, r] = xy_to_axial_v(p.x, p.y, grid);
             return { q, r, s: -q - r };
         });
@@ -38,8 +38,8 @@ export const Measure = {
         return distance;
     },
 
-    chebyshevHHex: function chebyshevHex (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => {
+    chebyshevHHex: function chebyshevHex(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => {
             const [q, r] = xy_to_axial_h(p.x, p.y, grid);
             return { q, r, s: -q - r };
         });
@@ -52,8 +52,8 @@ export const Measure = {
         return distance;
     },
 
-    chebyshevIsometric: function chebyshevIsometric (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => xy_to_uv_isometric(p.x, p.y, grid));
+    chebyshevIsometric: function chebyshevIsometric(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => xy_to_uv_isometric(p.x, p.y, grid));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -63,8 +63,8 @@ export const Measure = {
         return distance;
     },
 
-    chebyshevDimetric: function chebyshevDimetric (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => xy_to_uv_dimetric(p.x, p.y, grid));
+    chebyshevDimetric: function chebyshevDimetric(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => xy_to_uv_dimetric(p.x, p.y, grid));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -74,8 +74,8 @@ export const Measure = {
         return distance;
     },
 
-    manhattanSquare: function manhattanSquare (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => p.div(grid.dpi));
+    manhattanSquare: function manhattanSquare(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => p.div(grid.dpi));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -85,8 +85,8 @@ export const Measure = {
         return distance;
     },
 
-    manhattanIsometric: function manhattanIsometric (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => xy_to_uv_isometric(p.x, p.y, grid));
+    manhattanIsometric: function manhattanIsometric(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => xy_to_uv_isometric(p.x, p.y, grid));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -96,8 +96,8 @@ export const Measure = {
         return distance;
     },
 
-    manhattanDimetric: function manhattanDimetric (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => xy_to_uv_dimetric(p.x, p.y, grid));
+    manhattanDimetric: function manhattanDimetric(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => xy_to_uv_dimetric(p.x, p.y, grid));
         let distance = 0;
         for (let i = 1; i < gridPoints.length; i++) {
             const a = gridPoints[i];
@@ -107,8 +107,8 @@ export const Measure = {
         return distance;
     },
 
-    alternatingSquare: function alternatingSquare (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => p.div(grid.dpi));
+    alternatingSquare: function alternatingSquare(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => p.div(grid.dpi));
         let big = 0;
         let small = 0;
         for (let i = 1; i < gridPoints.length; i++) {
@@ -120,8 +120,8 @@ export const Measure = {
         return big + Math.floor(small / 2);
     },
 
-    alternatingIsometric: function alternatingIsometric (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => xy_to_uv_isometric(p.x, p.y, grid));
+    alternatingIsometric: function alternatingIsometric(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => xy_to_uv_isometric(p.x, p.y, grid));
         let big = 0;
         let small = 0;
         for (let i = 1; i < gridPoints.length; i++) {
@@ -133,8 +133,8 @@ export const Measure = {
         return big + Math.floor(small / 2);
     },
 
-    alternatingDimetric: function alternatingDimetric (points: Point[], grid: Grid): number {
-        const gridPoints = points.map(p => xy_to_uv_dimetric(p.x, p.y, grid));
+    alternatingDimetric: function alternatingDimetric(points: Point[], grid: Grid): number {
+        const gridPoints = points.map((p) => xy_to_uv_dimetric(p.x, p.y, grid));
         let big = 0;
         let small = 0;
         for (let i = 1; i < gridPoints.length; i++) {

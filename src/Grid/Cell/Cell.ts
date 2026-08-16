@@ -4,22 +4,21 @@ import { LineSegment } from '../LineSegment';
 import type { Grid } from '../Grid';
 
 export abstract class Cell {
-
     public readonly grid: Grid;
 
-    protected constructor (grid: Grid) {
+    protected constructor(grid: Grid) {
         this.grid = grid;
     }
 
-    public abstract get center (): Point;
+    public abstract get center(): Point;
 
-    public abstract get corners (): Point[];
+    public abstract get corners(): Point[];
 
-    public abstract nearestPointOnEdge (point: Vector2): Point;
+    public abstract nearestPointOnEdge(point: Vector2): Point;
 
-    public abstract toString (): string;
+    public abstract toString(): string;
 
-    public get edges (): LineSegment[] {
+    public get edges(): LineSegment[] {
         const lines: LineSegment[] = [];
         const corners = this.corners;
         for (let i = 0; i < corners.length; i++) {
@@ -30,11 +29,11 @@ export abstract class Cell {
         return lines;
     }
 
-    public isAdjacent (other: Cell): boolean {
-        return this.edges.some(edge => other.edges.some(otherEdge => edge.equals(otherEdge)));
+    public isAdjacent(other: Cell): boolean {
+        return this.edges.some((edge) => other.edges.some((otherEdge) => edge.equals(otherEdge)));
     }
 
-    public abstract containsPoint (point: Vector2): boolean ;
+    public abstract containsPoint(point: Vector2): boolean;
 
-    public abstract neighbors (include_corners: boolean): Cell[];
+    public abstract neighbors(include_corners: boolean): Cell[];
 }

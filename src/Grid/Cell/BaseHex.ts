@@ -4,15 +4,14 @@ import { Point } from '../Point';
 import type { Grid } from '../Grid';
 
 export abstract class BaseHex extends Cell {
-
     public readonly center: Point;
 
-    constructor (center: Vector2, grid: Grid) {
+    constructor(center: Vector2, grid: Grid) {
         super(grid);
         this.center = new Point(center);
     }
 
-    public nearestPointOnEdge (point: Vector2): Point {
+    public nearestPointOnEdge(point: Vector2): Point {
         const nearestCorner = Point.nearestPoint(point, this.corners);
         const secondNearestCorner = Point.nearestPoint(
             point,
@@ -38,5 +37,5 @@ export abstract class BaseHex extends Cell {
         });
     }
 
-    abstract get axialCoords (): [q: number, r: number, s: number];
+    abstract get axialCoords(): [q: number, r: number, s: number];
 }

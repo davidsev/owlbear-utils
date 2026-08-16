@@ -4,15 +4,14 @@ import { Point } from '../Point';
 import type { Grid } from '../Grid';
 
 export abstract class BaseAxonometric extends Cell {
-
     public readonly center: Point;
 
-    constructor (center: Vector2, grid: Grid) {
+    constructor(center: Vector2, grid: Grid) {
         super(grid);
         this.center = new Point(center);
     }
 
-    public nearestPointOnEdge (point: Vector2): Point {
+    public nearestPointOnEdge(point: Vector2): Point {
         const nearestCorner = Point.nearestPoint(point, this.corners);
         const neighboringCorners = this.corners.filter((corner) => {
             return corner.x != nearestCorner.x && corner.y != nearestCorner.y;
@@ -42,5 +41,5 @@ export abstract class BaseAxonometric extends Cell {
         });
     }
 
-    abstract get axonometricCoords (): [u: number, v: number];
+    abstract get axonometricCoords(): [u: number, v: number];
 }

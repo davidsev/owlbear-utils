@@ -4,19 +4,19 @@ import type { Grid } from './Grid';
 
 const SQRT3 = Math.sqrt(3);
 
-export function xy_to_axial_v (x: number, y: number, grid: Grid): [number, number] {
-    const q = (SQRT3 / 3 * x - 1. / 3 * y) / grid.hexRadius;
-    const r = (2. / 3 * y) / grid.hexRadius;
+export function xy_to_axial_v(x: number, y: number, grid: Grid): [number, number] {
+    const q = ((SQRT3 / 3) * x - (1 / 3) * y) / grid.hexRadius;
+    const r = ((2 / 3) * y) / grid.hexRadius;
     return [q, r];
 }
 
-export function xy_to_axial_h (x: number, y: number, grid: Grid): [number, number] {
-    const q = (2. / 3 * x) / grid.hexRadius;
-    const r = (-1. / 3 * x + SQRT3 / 3 * y) / grid.hexRadius;
+export function xy_to_axial_h(x: number, y: number, grid: Grid): [number, number] {
+    const q = ((2 / 3) * x) / grid.hexRadius;
+    const r = ((-1 / 3) * x + (SQRT3 / 3) * y) / grid.hexRadius;
     return [q, r];
 }
 
-export function axial_round (x: number, y: number): [number, number] {
+export function axial_round(x: number, y: number): [number, number] {
     const rounded_x = Math.round(x);
     const rounded_y = Math.round(y);
     x -= rounded_x;
@@ -26,14 +26,14 @@ export function axial_round (x: number, y: number): [number, number] {
     return [rounded_x + dx, rounded_y + dy];
 }
 
-export function axial_to_xy_v (q: number, r: number, grid: Grid): [number, number] {
-    const x = grid.hexRadius * (SQRT3 * q + SQRT3 / 2 * r);
-    const y = grid.hexRadius * (3. / 2 * r);
+export function axial_to_xy_v(q: number, r: number, grid: Grid): [number, number] {
+    const x = grid.hexRadius * (SQRT3 * q + (SQRT3 / 2) * r);
+    const y = grid.hexRadius * ((3 / 2) * r);
     return [x, y];
 }
 
-export function axial_to_xy_h (q: number, r: number, grid: Grid): [number, number] {
-    const x = grid.hexRadius * (3. / 2 * q);
-    const y = grid.hexRadius * (SQRT3 / 2 * q + SQRT3 * r);
+export function axial_to_xy_h(q: number, r: number, grid: Grid): [number, number] {
+    const x = grid.hexRadius * ((3 / 2) * q);
+    const y = grid.hexRadius * ((SQRT3 / 2) * q + SQRT3 * r);
     return [x, y];
 }
