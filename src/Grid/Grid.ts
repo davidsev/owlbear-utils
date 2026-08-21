@@ -111,14 +111,14 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
 
     protected abstract measureChebyshev(points: Point[]): number;
 
-    /** Not every grid type supports this measurement, so the default is to say the distance is 0. */
+    /** Not every grid type supports this measurement, so the default is to throw. */
     protected measureManhattan(_points: Point[]): number {
-        return 0;
+        throw new Error(`"${this.type}" grids don't support MANHATTAN measurement`);
     }
 
-    /** Not every grid type supports this measurement, so the default is to say the distance is 0. */
+    /** Not every grid type supports this measurement, so the default is to throw. */
     protected measureAlternating(_points: Point[]): number {
-        return 0;
+        throw new Error(`"${this.type}" grids don't support ALTERNATING measurement`);
     }
 
     /** Get whether the point is closest to the corner or the center of a cell. */

@@ -60,5 +60,5 @@ export abstract class BaseHexGrid<C extends BaseHex = BaseHex> extends Grid<C> {
     }
 
     // Hex grids have no meaningful Manhattan or Alternating measurement, so they keep Grid's
-    // default of returning 0.
+    // default of throwing.
 }
