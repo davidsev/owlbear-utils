@@ -1,26 +1,23 @@
 import { Point } from '../Point';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
 import type { Cell } from './Cell';
-import { axial_round, axial_to_xy_v, xy_to_axial_v } from '../HexFunctions';
+import { axial_round } from '../BaseHexGrid';
 import { BaseHex } from './BaseHex';
-import type { Grid } from '../Grid';
+import type { VHexGrid } from '../VHexGrid';
 
 export class VHex extends BaseHex {
-    constructor(center: Vector2, grid: Grid) {
+    public declare readonly grid: VHexGrid;
+
+    // biome-ignore lint/complexity/noUselessConstructor: narrows the inherited grid param to VHexGrid, so the declare above holds
+    constructor(center: Vector2, grid: VHexGrid) {
         super(center, grid);
-        if (grid.type !== 'HEX_VERTICAL') throw new Error(`Cannot create a VHex cell for a "${grid.type}" grid`);
     }
 
-    static fromAxial(q: number, r: number, grid: Grid): VHex {
+    static fromAxial(q: number, r: number, grid: VHexGrid): VHex {
         const [round_q, round_r] = axial_round(q, r);
-        const [x, y] = axial_to_xy_v(round_q, round_r, grid);
+        const [x, y] = grid.axial_to_xy(round_q, round_r);
 
         return new VHex({ x: x, y: y - grid.hexRadius / 2 }, grid);
-    }
-
-    get axialCoords(): [q: number, r: number, s: number] {
-        const [q, r] = xy_to_axial_v(this.center.x, this.center.y, this.grid);
-        return [q, r, -q - r];
     }
 
     get corners(): Point[] {
@@ -53,15 +50,15 @@ export class VHex extends BaseHex {
     }
 
     public neighbors(_include_corners: boolean): VHex[] {
-        const [q, r] = xy_to_axial_v(this.center.x, this.center.y, this.grid);
+        const [q, r] = this.grid.xy_to_axial(this.center.x, this.center.y);
 
         return [
-            new VHex(new Point(...axial_to_xy_v(q + 1, r, this.grid)), this.grid),
-            new VHex(new Point(...axial_to_xy_v(q - 1, r, this.grid)), this.grid),
-            new VHex(new Point(...axial_to_xy_v(q, r + 1, this.grid)), this.grid),
-            new VHex(new Point(...axial_to_xy_v(q, r - 1, this.grid)), this.grid),
-            new VHex(new Point(...axial_to_xy_v(q + 1, r - 1, this.grid)), this.grid),
-            new VHex(new Point(...axial_to_xy_v(q - 1, r + 1, this.grid)), this.grid),
+            new VHex(new Point(...this.grid.axial_to_xy(q + 1, r)), this.grid),
+            new VHex(new Point(...this.grid.axial_to_xy(q - 1, r)), this.grid),
+            new VHex(new Point(...this.grid.axial_to_xy(q, r + 1)), this.grid),
+            new VHex(new Point(...this.grid.axial_to_xy(q, r - 1)), this.grid),
+            new VHex(new Point(...this.grid.axial_to_xy(q + 1, r - 1)), this.grid),
+            new VHex(new Point(...this.grid.axial_to_xy(q - 1, r + 1)), this.grid),
         ];
     }
 }

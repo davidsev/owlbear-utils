@@ -1,14 +1,15 @@
 import { Point } from '../Point';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
 import type { Cell } from './Cell';
-import { uv_to_xy_dimetric, xy_to_uv_dimetric } from '../AxonometricFunctions';
 import { BaseAxonometric } from './BaseAxonometric';
-import type { Grid } from '../Grid';
+import type { DimetricGrid } from '../DimetricGrid';
 
 export class Dimetric extends BaseAxonometric {
-    constructor(center: Vector2, grid: Grid) {
+    public declare readonly grid: DimetricGrid;
+
+    // biome-ignore lint/complexity/noUselessConstructor: narrows the inherited grid param to DimetricGrid, so the declare above holds
+    constructor(center: Vector2, grid: DimetricGrid) {
         super(center, grid);
-        if (grid.type !== 'DIMETRIC') throw new Error(`Cannot create a Dimetric cell for a "${grid.type}" grid`);
     }
 
     get corners(): Point[] {
@@ -25,19 +26,19 @@ export class Dimetric extends BaseAxonometric {
     }
 
     public neighbors(include_corners: boolean): Dimetric[] {
-        const [u, v] = xy_to_uv_dimetric(this.center.x, this.center.y, this.grid);
+        const [u, v] = this.grid.xy_to_uv(this.center.x, this.center.y);
 
         const sides = [
-            new Dimetric(new Point(...uv_to_xy_dimetric(u + 1, v, this.grid)), this.grid),
-            new Dimetric(new Point(...uv_to_xy_dimetric(u, v + 1, this.grid)), this.grid),
-            new Dimetric(new Point(...uv_to_xy_dimetric(u - 1, v, this.grid)), this.grid),
-            new Dimetric(new Point(...uv_to_xy_dimetric(u, v - 1, this.grid)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u + 1, v)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u, v + 1)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u - 1, v)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u, v - 1)), this.grid),
         ];
         const corners = [
-            new Dimetric(new Point(...uv_to_xy_dimetric(u + 1, v + 1, this.grid)), this.grid),
-            new Dimetric(new Point(...uv_to_xy_dimetric(u + 1, v - 1, this.grid)), this.grid),
-            new Dimetric(new Point(...uv_to_xy_dimetric(u - 1, v + 1, this.grid)), this.grid),
-            new Dimetric(new Point(...uv_to_xy_dimetric(u - 1, v - 1, this.grid)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u + 1, v + 1)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u + 1, v - 1)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u - 1, v + 1)), this.grid),
+            new Dimetric(new Point(...this.grid.uv_to_xy(u - 1, v - 1)), this.grid),
         ];
 
         return [...sides, ...(include_corners ? corners : [])];
@@ -52,9 +53,5 @@ export class Dimetric extends BaseAxonometric {
     public containsPoint(point: Vector2): boolean {
         const cell = this.grid.getCell(point);
         return this.center.equals(cell.center);
-    }
-
-    public get axonometricCoords(): [u: number, v: number] {
-        return xy_to_uv_dimetric(this.center.x, this.center.y, this.grid);
     }
 }

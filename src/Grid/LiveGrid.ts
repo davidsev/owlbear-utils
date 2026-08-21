@@ -6,7 +6,9 @@ import OBR, {
     type GridType,
     type Vector2,
 } from '@owlbear-rodeo/sdk';
-import { Grid } from './Grid';
+import type { Grid } from './Grid';
+import type { AnyGrid } from './AnyGrid';
+import { assertSupportedGridType, buildGrid } from './buildGrid';
 import type { SnapTo } from './SnapTo';
 import type { Cell } from './Cell/Cell';
 import type { Square } from './Cell/Square';
@@ -17,11 +19,11 @@ import type { Dimetric } from './Cell/Dimetric';
 import type { Point } from './Point';
 
 /** Called with the new settings whenever the grid changes. */
-export type GridChangeCallback = (grid: Grid) => void;
+export type GridChangeCallback = (grid: AnyGrid) => void;
 
 /** Watches OBR's scene grid, and exposes the current settings as a Grid. */
 export class LiveGrid implements BaseGrid {
-    private current?: Grid;
+    private current?: AnyGrid;
     private readyPromises: (() => void)[] = [];
     private changeCallbacks: GridChangeCallback[] = [];
     private obrUnsubscribe?: () => void;
@@ -35,13 +37,17 @@ export class LiveGrid implements BaseGrid {
 
         // Watch for grid changes.
         this.obrUnsubscribe = OBR.scene.grid.onChange((gridData) => {
+            // Fail here rather than letting buildGrid() throw further down: on the async path that
+            // error would land in the catch below and be reported as a scale lookup failure.
+            assertSupportedGridType(gridData.type);
+
             const seq = ++this.seq;
 
             // getScale() only adds the parsed breakdown to the raw string that's already in
             // gridData, so if the scale hasn't changed we can publish without waiting for it.
             const cachedScale = this.current?.gridScale;
             if (cachedScale && cachedScale.raw === gridData.scale) {
-                this.publish(new Grid(gridData, cachedScale));
+                this.publish(buildGrid(gridData, cachedScale));
                 return;
             }
 
@@ -49,7 +55,7 @@ export class LiveGrid implements BaseGrid {
                 .getScale()
                 .then((scaleData) => {
                     // Something newer arrived while we were waiting, so drop this.
-                    if (seq === this.seq) this.publish(new Grid(gridData, scaleData));
+                    if (seq === this.seq) this.publish(buildGrid(gridData, scaleData));
                 })
                 .catch((err) => {
                     console.error('[owlbear-utils] Failed to read the grid scale', err);
@@ -86,12 +92,12 @@ export class LiveGrid implements BaseGrid {
             const scaleData = await promises.scale;
 
             // A change event may have landed while we were loading, and that data is newer.
-            if (seq === this.seq) this.publish(new Grid(gridData, scaleData));
+            if (seq === this.seq) this.publish(buildGrid(gridData, scaleData));
         }
     }
 
     /** Swap in a new snapshot, then tell everyone who's waiting. */
-    private publish(grid: Grid): void {
+    private publish(grid: AnyGrid): void {
         this.current = grid;
 
         this.readyPromises.forEach((resolve) => {
@@ -129,13 +135,16 @@ export class LiveGrid implements BaseGrid {
         });
     }
 
-    private get grid(): Grid {
+    private get grid(): AnyGrid {
         if (!this.current) throw new Error('Grid data not loaded yet');
         return this.current;
     }
 
-    /** The current settings, as an immutable snapshot to pass to cells and other helpers. */
-    public get snapshot(): Grid {
+    /**
+     * The current settings, as an immutable snapshot to pass to cells and other helpers.
+     * Switch on `.type` to narrow this to a concrete grid class — see `AnyGrid`.
+     */
+    public get snapshot(): AnyGrid {
         return this.grid;
     }
 
@@ -186,6 +195,11 @@ export class LiveGrid implements BaseGrid {
     }
 
     public iterateCellsBoundingPoints<T extends Square | VHex | HHex | Isometric | Dimetric>(points: T[]): T[] {
-        return this.grid.iterateCellsBoundingPoints(points);
+        // Go via the base class: each subclass narrows this method's parameter, so calling it on
+        // the AnyGrid union asks for the intersection of all five cell types, which nothing
+        // satisfies.  The upcast takes any Cell[] though, so the `as T[]` below is only sound
+        // because Grid.checkCellType() re-checks the cells against the grid at runtime.
+        const grid: Grid = this.grid;
+        return grid.iterateCellsBoundingPoints(points) as T[];
     }
 }

@@ -1,12 +1,13 @@
 import { Cell } from './Cell';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
 import { Point } from '../Point';
-import type { Grid } from '../Grid';
+import type { BaseHexGrid } from '../BaseHexGrid';
 
 export abstract class BaseHex extends Cell {
+    public declare readonly grid: BaseHexGrid;
     public readonly center: Point;
 
-    constructor(center: Vector2, grid: Grid) {
+    constructor(center: Vector2, grid: BaseHexGrid) {
         super(grid);
         this.center = new Point(center);
     }
@@ -37,5 +38,8 @@ export abstract class BaseHex extends Cell {
         });
     }
 
-    abstract get axialCoords(): [q: number, r: number, s: number];
+    get axialCoords(): [q: number, r: number, s: number] {
+        const [q, r] = this.grid.xy_to_axial(this.center.x, this.center.y);
+        return [q, r, -q - r];
+    }
 }

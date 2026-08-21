@@ -1,14 +1,14 @@
 import { Cell } from './Cell';
 import { Point } from '../Point';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
-import type { Grid } from '../Grid';
+import type { SquareGrid } from '../SquareGrid';
 
 export class Square extends Cell {
+    public declare readonly grid: SquareGrid;
     public readonly center: Point;
 
-    constructor(center: Vector2, grid: Grid) {
+    constructor(center: Vector2, grid: SquareGrid) {
         super(grid);
-        if (grid.type !== 'SQUARE') throw new Error(`Cannot create a Square cell for a "${grid.type}" grid`);
         this.center = new Point(center);
     }
 
@@ -63,7 +63,7 @@ export class Square extends Cell {
             for (let y = -this.grid.dpi; y <= this.grid.dpi; y += this.grid.dpi) {
                 if (x === 0 && y === 0) continue;
                 if (!include_corners && Math.abs(x) === Math.abs(y)) continue;
-                neighbors.push(this.grid.getCell(this.center.add({ x, y })) as Square);
+                neighbors.push(this.grid.getCell(this.center.add({ x, y })));
             }
         }
         return neighbors;
