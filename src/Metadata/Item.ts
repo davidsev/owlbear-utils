@@ -11,11 +11,6 @@ export class ItemMetadataMapper<T> {
         return cleanMetadata(values, this.defaultValues);
     }
 
-    /** @deprecated renamed to setDefaultValues instead */
-    public clean(values: Metadata): T {
-        return this.setDefaultValues(values);
-    }
-
     get(item: Item): T {
         const myMetadata = (item.metadata[this.key] || {}) as Metadata;
         return this.setDefaultValues(myMetadata);

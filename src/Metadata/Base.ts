@@ -16,11 +16,6 @@ export abstract class BaseMetadataMapper<T> {
         return cleanMetadata(values, this.defaultValues);
     }
 
-    /** @deprecated renamed to setDefaultValues instead */
-    public clean(values: Metadata): T {
-        return this.setDefaultValues(values);
-    }
-
     /** Take the raw metadata (as saved) and clean it up for use. */
     public cleanRawMetadata(rawMetadata: Metadata): T {
         return this.setDefaultValues(this.transformLoadingValues(rawMetadata));
