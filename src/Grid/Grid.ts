@@ -106,7 +106,7 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         if (this.measurement === 'MANHATTAN') return this.measureManhattan(cleanPoints);
         if (this.measurement === 'ALTERNATING') return this.measureAlternating(cleanPoints);
 
-        return 0;
+        throw new Error(`Unrecognised measurement "${this.measurement}"`);
     }
 
     protected abstract measureChebyshev(points: Point[]): number;
@@ -130,7 +130,12 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         else return SnapTo.CORNER;
     }
 
-    /** Returns every cell in the bounding box of the given cells. */
+    /**
+     * Returns every cell that touches the convex hull of the given cells.  This is deliberately not
+     * guaranteed to be the minimal/exact set - computing that precisely is expensive and unnecessary
+     * for most callers (eg. redrawing a viewport), so implementations may over-include cells near the
+     * edge. If a strict/exact version is ever needed, add it separately rather than tightening this one.
+     */
     public iterateCellsBoundingPoints(points: C[]): C[] {
         if (points.length === 0) return [];
         this.checkCellType(points);
