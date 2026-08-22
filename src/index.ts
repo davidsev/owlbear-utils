@@ -32,6 +32,7 @@ export { CachedPlayerMetadata } from './Metadata/Cached/Player';
 export { CachedRoomMetadata } from './Metadata/Cached/Room';
 export { CachedSceneMetadata } from './Metadata/Cached/Scene';
 export { awaitReady } from './awaitReady';
+export { awaitScene } from './awaitScene';
 
 export const grid = new LiveGrid();
 
