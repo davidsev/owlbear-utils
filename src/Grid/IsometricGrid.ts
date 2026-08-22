@@ -21,8 +21,10 @@ export class IsometricGrid extends BaseAxonometricGrid<Isometric> {
     }
 
     public getCell(point: Vector2): Isometric {
-        // OBR has 0,0 not in the center of a cell, so offset by a bit.
-        const xOffset = this.dpi - this.hexRadius / 4;
+        // OBR has 0,0 not in the center of a cell, so offset by a bit.  The offset is negative so
+        // that a point exactly on a cell boundary (eg. the origin) resolves to the cell above/right
+        // of it, matching SquareGrid's round-half-up tie-break rather than resolving to the left.
+        const xOffset = -(this.dpi - this.hexRadius / 4);
         const [u, v] = this.xy_to_uv(point.x + xOffset, point.y);
         const [x, y] = this.uv_to_xy(Math.round(u), Math.round(v));
         return new Isometric({ x: x - xOffset, y }, this);
