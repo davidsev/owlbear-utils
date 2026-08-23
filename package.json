@@ -31,7 +31,8 @@
         "typescript": "^5.2.2"
     },
     "files": [
-        "js"
+        "js",
+        "UPGRADING.md"
     ],
     "main": "js/index.js",
     "types": "js/index.d.ts"
