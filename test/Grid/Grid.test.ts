@@ -66,6 +66,17 @@ test('measure throws for an unrecognised measurement', () => {
     assert.throws(() => grid.measure({ x: 0, y: 0 }, { x: 300, y: 400 }), /Unrecognised measurement/);
 });
 
+test('withMeasurement overrides the measurement without mutating the original grid', () => {
+    const grid = makeGrid('EUCLIDEAN');
+    const overridden = grid.withMeasurement('CHEBYSHEV');
+    const chebyshevGrid = makeGrid('CHEBYSHEV');
+
+    assert.equal(overridden.measurement, 'CHEBYSHEV');
+    assert.equal(grid.measurement, 'EUCLIDEAN');
+    assert.ok(overridden instanceof SquareGrid);
+    assert.equal(overridden.measure({ x: 0, y: 0 }, { x: 300, y: 400 }), chebyshevGrid.measure({ x: 0, y: 0 }, { x: 300, y: 400 }));
+});
+
 test('iterateCellsBoundingPoints throws crossing a different grid type of the same shape', () => {
     const square = makeGrid();
     const hex = new VHexGrid(makeGridData('HEX_VERTICAL'), makeGridScale());

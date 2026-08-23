@@ -64,6 +64,16 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         return this.scaleData;
     }
 
+    /**
+     * Returns a copy of this grid with the measurement setting overridden, leaving the live scene
+     * setting (and everything else about this snapshot) untouched.  Relies on no subclass declaring
+     * its own constructor, so `this.constructor` always matches `Grid`'s `(gridData, scaleData)`.
+     */
+    public withMeasurement(measurement: GridMeasurement): this {
+        const Ctor = this.constructor as new (gridData: BaseGrid, scaleData: GridScale) => this;
+        return new Ctor({ ...this.gridData, measurement }, this.scaleData);
+    }
+
     public abstract getCell(point: Vector2): C;
 
     public snapTo(point: Vector2, snapTo: SnapTo): Point {

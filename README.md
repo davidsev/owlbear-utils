@@ -63,6 +63,9 @@ it's a drop-in wherever the SDK's `Grid` type is expected, plus:
   or one it returns `0`. Square, isometric and dimetric grids support all four measurements; hex grids
   only support `EUCLIDEAN`/`CHEBYSHEV` (hexes have no meaningful Manhattan/Alternating distance). Asking
   for an unsupported combination throws.
+- `withMeasurement(measurement)` — returns a copy of an `AnyGrid` snapshot with the measurement setting
+  overridden, for measuring with a different rule than the scene is actually configured with, eg.
+  `grid.snapshot.withMeasurement('CHEBYSHEV').measure(a, b)`. Leaves the live scene setting untouched.
 - `gridScale` — the SDK's parsed `GridScale` (`{ raw, parsed: { multiplier, unit, digits } }`); multiply
   a `measure()` result by `grid.gridScale.parsed.multiplier` to get scene units.
 - `hexRadius` — the centre-to-corner distance on hex grids.
