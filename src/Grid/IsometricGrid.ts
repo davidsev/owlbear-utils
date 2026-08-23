@@ -21,10 +21,13 @@ export class IsometricGrid extends BaseAxonometricGrid<Isometric> {
     }
 
     public getCell(point: Vector2): Isometric {
-        // OBR has 0,0 not in the center of a cell, so offset by a bit.  The offset is negative so
-        // that a point exactly on a cell boundary (eg. the origin) resolves to the cell above/right
-        // of it, matching SquareGrid's round-half-up tie-break rather than resolving to the left.
-        const xOffset = -(this.dpi - this.hexRadius / 4);
+        // OBR has 0,0 not in the center of a cell, so offset by half a cell width (dpi * SQRT3 / 2,
+        // the same half-width Isometric.corners uses).  xOffset / w is exactly 0.5, so without the
+        // nudge below, points on the diagonal cell boundaries (eg. the origin) land exactly on a
+        // rounding tie.  The offset is negative and nudged just under that magnitude so the tie
+        // breaks towards the cell above/right of the boundary point, matching SquareGrid's
+        // round-half-up convention and DimetricGrid's.
+        const xOffset = -(((this.dpi * SQRT3) / 2) * (1 - 1e-9));
         const [u, v] = this.xy_to_uv(point.x + xOffset, point.y);
         const [x, y] = this.uv_to_xy(Math.round(u), Math.round(v));
         return new Isometric({ x: x - xOffset, y }, this);

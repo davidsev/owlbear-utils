@@ -143,4 +143,14 @@ for (const { name, type, Grid } of orientations) {
         assert.equal(manhattanGrid.measure(pointA, pointB), 5);
         assert.equal(alternatingGrid.measure(pointA, pointB), 4);
     });
+
+    test(`${name}: a point exactly on a cell boundary rounds towards positive, matching SquareGrid's round-half-up convention`, () => {
+        const grid = new Grid(makeGridData(type), makeGridScale());
+        const eps = 1e-6;
+        const onBoundary = grid.getCell({ x: 0, y: 0 });
+        const justBelow = grid.getCell({ x: -eps, y: 0 });
+        const justAbove = grid.getCell({ x: eps, y: 0 });
+        assert.equal(onBoundary.center.equals(justAbove.center), true);
+        assert.equal(onBoundary.center.equals(justBelow.center), false);
+    });
 }

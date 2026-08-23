@@ -4,6 +4,7 @@ import { VHexGrid } from '../../src/Grid/VHexGrid';
 import { HHexGrid } from '../../src/Grid/HHexGrid';
 import { VHex } from '../../src/Grid/Cell/VHex';
 import { HHex } from '../../src/Grid/Cell/HHex';
+import { SnapTo } from '../../src/Grid/SnapTo';
 import { makeGridData, makeGridScale } from '../helpers/gridData';
 import { xy } from '../helpers/point';
 
@@ -59,6 +60,15 @@ for (const { name, type, Grid, Cell } of orientations) {
         assert.equal(Math.round(r), -1);
     });
 
+    test(`${name}: axialCoords returns the exact integers fromAxial was built from`, () => {
+        const grid = new Grid(makeGridData(type), makeGridScale());
+        const cell = Cell.fromAxial(2, -1, grid as never);
+        const [q, r, s] = cell.axialCoords;
+        assert.ok(Math.abs(q - 2) < 1e-6, `q was ${q}, expected 2`);
+        assert.ok(Math.abs(r - -1) < 1e-6, `r was ${r}, expected -1`);
+        assert.ok(Math.abs(s - -1) < 1e-6, `s was ${s}, expected -1`);
+    });
+
     test(`${name}: neighbors are adjacent to the origin cell and land on real cell centers`, () => {
         const grid = new Grid(makeGridData(type), makeGridScale());
         const cell = grid.getCell({ x: 0, y: 0 });
@@ -88,6 +98,16 @@ for (const { name, type, Grid, Cell } of orientations) {
         const nearest = cell.nearestPointOnEdge(midpoint);
         assert.ok(Math.abs(nearest.x - midpoint.x) < 1e-6);
         assert.ok(Math.abs(nearest.y - midpoint.y) < 1e-6);
+    });
+
+    test(`${name}: snapping a cell's own center to its edge does not return NaN`, () => {
+        const grid = new Grid(makeGridData(type), makeGridScale());
+        const cell = grid.getCell({ x: 0, y: 0 });
+        const nearest = cell.nearestPointOnEdge(cell.center);
+        assert.ok(Number.isFinite(nearest.x) && Number.isFinite(nearest.y), `nearestPointOnEdge(center) was (${nearest.x}, ${nearest.y})`);
+
+        const snapped = grid.snapTo(cell.center, SnapTo.EDGE);
+        assert.ok(Number.isFinite(snapped.x) && Number.isFinite(snapped.y), `snapTo(center, EDGE) was (${snapped.x}, ${snapped.y})`);
     });
 
     test(`${name}: iterateCellsBoundingPoints covers every (q, r) pair in the bounding box exactly once`, () => {

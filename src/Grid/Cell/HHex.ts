@@ -20,6 +20,14 @@ export class HHex extends BaseHex {
         return new HHex({ x: x - grid.hexRadius / 2, y }, grid);
     }
 
+    get axialCoords(): [q: number, r: number, s: number] {
+        // getCell/fromAxial offset x by half a hex before converting (OBR's 0,0 isn't a cell
+        // center), so invert that offset here to get back the exact integers fromAxial was built
+        // from, rather than a value that's only right once rounded.
+        const [q, r] = this.grid.xy_to_axial(this.center.x + this.grid.hexRadius / 2, this.center.y);
+        return [q, r, -q - r];
+    }
+
     get corners(): Point[] {
         return [
             this.center.add({ x: -this.grid.hexRadius, y: 0 }),
