@@ -10,17 +10,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
-
             - uses: actions/setup-node@v7
               with:
                   node-version: 22
-
             - run: npm ci
-
+            - run: npm run typecheck
             - run: npm run format:check
-
             - run: npm run lint
-
             - run: npm test
 
     publish:
@@ -31,16 +27,11 @@ jobs:
             id-token: write
         steps:
             - uses: actions/checkout@v7
-
             - uses: actions/setup-node@v7
               with:
                   node-version: 22
                   registry-url: https://registry.npmjs.org
-
             - run: npm install -g npm@latest
-
             - run: npm ci
-
             - run: npm run build
-
             - run: npm publish

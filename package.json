@@ -4,6 +4,7 @@
     "scripts": {
         "build": "tsc",
         "watch": "tsc --watch",
+        "typecheck": "tsc --noEmit",
         "format": "biome format --write .",
         "format:check": "biome format .",
         "lint": "biome lint .",
