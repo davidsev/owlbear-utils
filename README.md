@@ -52,7 +52,10 @@ const unsubscribe = grid.onChange((newGrid) => {
 `grid` implements the SDK's `Grid` interface (`dpi`, `style`, `type`, `measurement`, `scale`, ...), so
 it's a drop-in wherever the SDK's `Grid` type is expected, plus:
 
-- `getCell(point)` — the `Vector2` → `Cell` for the current grid type.
+- `getCell(point)` — the `Vector2` → `AnyCell` for the current grid type.
+- `snapshot` — an immutable, point-in-time `AnyGrid` (`SquareGrid | VHexGrid | HHexGrid | IsometricGrid | DimetricGrid`)
+  of the grid's current state — useful if you need to pass a grid around without it changing under you, or
+  outside the live `grid` singleton (eg. in a worker).
 - `snapTo(point, snapTo)` — snap to the nearest corner/center/edge (`SnapTo` is a bitflag enum).
 - `measure(...pointsOrCells)` — distance between points/cells, in grid cells, using whatever
   measurement (`EUCLIDEAN`/`CHEBYSHEV`/`MANHATTAN`/`ALTERNATING`) the scene is configured with. With
@@ -80,8 +83,8 @@ it's a drop-in wherever the SDK's `Grid` type is expected, plus:
 
 ### Cells
 
-`getCell()` returns a `Cell` (concretely a `Square`, `VHex`, `HHex`, `Isometric` or `Dimetric`,
-depending on the scene's grid type). Every cell has:
+`getCell()` returns an `AnyCell` (`Square`, `VHex`, `HHex`, `Isometric` or `Dimetric`, depending on the
+scene's grid type). Every cell has:
 
 - `.center` / `.corners` / `.edges` — `Point`s and `LineSegment`s.
 - `.containsPoint(point)`
@@ -99,22 +102,30 @@ Hex cells (`VHex`/`HHex`) additionally have `.axialCoords` (`[q, r, s]`) and a `
 
 ### Working with a specific grid type
 
-`grid.getCell()` returns the general `Cell` base type, since `grid`'s type isn't known statically. To
-get a strongly-typed cell (eg. a `VHex` with `.axialCoords`), narrow on `grid.snapshot.type` first:
+`grid.getCell()` returns `AnyCell` (`Square | VHex | HHex | Isometric | Dimetric`) rather than the
+general `Cell` base type, so it already satisfies `iterateCellsBoundingPoints`'s type signature with no
+cast. To narrow it to a concrete class (eg. a `VHex` with `.axialCoords`), use `instanceof`:
+
+```ts
+import { grid, VHex } from '@davidsev/owlbear-utils';
+
+const cell = grid.getCell(point);
+if (cell instanceof VHex) {
+    console.log(cell.axialCoords); // typed as VHex, not Cell
+}
+```
+
+To get a concrete `Grid` subclass instead of a cell (eg. to call `VHex.fromAxial(q, r, grid)`, whose
+`grid` parameter is typed `VHexGrid`), narrow `grid.snapshot` on `.type`:
 
 ```ts
 import { grid, type AnyGrid } from '@davidsev/owlbear-utils';
 
 const g: AnyGrid = grid.snapshot;
 if (g.type === 'HEX_VERTICAL') {
-    const cell = g.getCell(point); // typed as VHex, not Cell
-    console.log(cell.axialCoords);
+    const cell = VHex.fromAxial(q, r, g); // g is typed as VHexGrid here
 }
 ```
-
-This also matters for `iterateCellsBoundingPoints`, whose type signature requires cells of a concrete
-type (`Square | VHex | HHex | Isometric | Dimetric`) rather than the general `Cell` — pass cells you got
-from `grid.snapshot.getCell()` rather than `grid.getCell()` if you want it to typecheck without a cast.
 
 ### Building a grid without a live scene
 

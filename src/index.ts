@@ -4,6 +4,7 @@ import { LiveGrid } from './Grid/LiveGrid';
 export { Point } from './Grid/Point';
 export { LineSegment } from './Grid/LineSegment';
 export { Cell } from './Grid/Cell/Cell';
+export type { AnyCell } from './Grid/Cell/AnyCell';
 export { Square } from './Grid/Cell/Square';
 export { BaseHex } from './Grid/Cell/BaseHex';
 export { VHex } from './Grid/Cell/VHex';

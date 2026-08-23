@@ -11,11 +11,7 @@ import type { AnyGrid } from './AnyGrid';
 import { assertSupportedGridType, buildGrid } from './buildGrid';
 import type { SnapTo } from './SnapTo';
 import type { Cell } from './Cell/Cell';
-import type { Square } from './Cell/Square';
-import type { VHex } from './Cell/VHex';
-import type { HHex } from './Cell/HHex';
-import type { Isometric } from './Cell/Isometric';
-import type { Dimetric } from './Cell/Dimetric';
+import type { AnyCell } from './Cell/AnyCell';
 import type { Point } from './Point';
 
 /** Called with the new settings whenever the grid changes. */
@@ -176,7 +172,7 @@ export class LiveGrid implements BaseGrid {
         return this.grid.gridScale;
     }
 
-    public getCell(point: Vector2): Cell {
+    public getCell(point: Vector2): AnyCell {
         return this.grid.getCell(point);
     }
 
@@ -194,7 +190,7 @@ export class LiveGrid implements BaseGrid {
         return this.grid.getNearestSnapType(point);
     }
 
-    public iterateCellsBoundingPoints<T extends Square | VHex | HHex | Isometric | Dimetric>(points: T[]): T[] {
+    public iterateCellsBoundingPoints<T extends AnyCell>(points: T[]): T[] {
         // Go via the base class: each subclass narrows this method's parameter, so calling it on
         // the AnyGrid union asks for the intersection of all five cell types, which nothing
         // satisfies.  The upcast takes any Cell[] though, so the `as T[]` below is only sound

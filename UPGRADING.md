@@ -47,9 +47,9 @@ This mostly matters if you constructed cells directly rather than via `grid.getC
 - **`Square.fromCoords(point)` / `VHex.fromCoords(point)` / `HHex.fromCoords(point)` /
   `Isometric.fromCoords(point)` / `Dimetric.fromCoords(point)` are gone.** Use `grid.getCell(point)` (or
   `someGridSnapshot.getCell(point)`) instead — that's the one entry point for turning a `Vector2` into a
-  cell now. Note `grid.getCell()` returns the general `Cell` type rather than the concrete subclass
-  `fromCoords()` used to — narrow via `grid.snapshot.type` first if you need eg. a `Square` specifically
-  (see the README's "Working with a specific grid type" section).
+  cell now. `grid.getCell()` returns `AnyCell`, a union of the concrete subclasses rather than the
+  general `Cell` type `fromCoords()` used to return — narrow via `instanceof` if you need eg. a `Square`
+  specifically (see the README's "Working with a specific grid type" section).
 - **`Square.iterateCellsBoundingPoints(cells)` (a static) is gone — as are the `VHex`/`HHex`/`Isometric`/
   `Dimetric` equivalents.** Use `grid.iterateCellsBoundingPoints(cells)` instead (same method, now on the
   grid rather than the cell class, and works for every grid type rather than needing a per-type static).
