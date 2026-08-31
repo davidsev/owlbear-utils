@@ -39,6 +39,17 @@ export class VHex extends BaseHex {
         ];
     }
 
+    get edgeMidpoints(): Point[] {
+        return [
+            this.center.add({ x: this.grid.dpi / 4, y: (-this.grid.hexRadius * 3) / 4 }),
+            this.center.add({ x: this.grid.dpi / 2, y: 0 }),
+            this.center.add({ x: this.grid.dpi / 4, y: (this.grid.hexRadius * 3) / 4 }),
+            this.center.add({ x: -this.grid.dpi / 4, y: (this.grid.hexRadius * 3) / 4 }),
+            this.center.add({ x: -this.grid.dpi / 2, y: 0 }),
+            this.center.add({ x: -this.grid.dpi / 4, y: (-this.grid.hexRadius * 3) / 4 }),
+        ];
+    }
+
     public toString(): string {
         return `VHex${this.center}`;
     }

@@ -94,6 +94,19 @@ for (const { name, type, Grid } of orientations) {
         assert.ok(Math.abs(nearest.y - midpoint.y) < 1e-6);
     });
 
+    test(`${name}: edgeMidpoints are the midpoints of each pair of adjacent corners`, () => {
+        const grid = new Grid(makeGridData(type), makeGridScale());
+        const cell = grid.getCell({ x: 0, y: 0 });
+        const corners = cell.corners;
+        const midpoints = cell.edgeMidpoints;
+        assert.equal(midpoints.length, corners.length);
+        corners.forEach((c0, i) => {
+            const c1 = corners[(i + 1) % corners.length];
+            assert.ok(Math.abs(midpoints[i].x - (c0.x + c1.x) / 2) < 1e-6, `midpoint ${i} x was ${midpoints[i].x}`);
+            assert.ok(Math.abs(midpoints[i].y - (c0.y + c1.y) / 2) < 1e-6, `midpoint ${i} y was ${midpoints[i].y}`);
+        });
+    });
+
     test(`${name}: iterateCellsBoundingPoints covers every (u, v) pair in the bounding box exactly once`, () => {
         const grid = new Grid(makeGridData(type), makeGridScale());
         const [x0, y0] = grid.uv_to_xy(0, 0);

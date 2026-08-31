@@ -22,6 +22,16 @@ export class Square extends Cell {
         ];
     }
 
+    get edgeMidpoints(): Point[] {
+        const halfDpi = this.grid.dpi / 2;
+        return [
+            this.center.add({ x: 0, y: -halfDpi }),
+            this.center.add({ x: +halfDpi, y: 0 }),
+            this.center.add({ x: 0, y: +halfDpi }),
+            this.center.add({ x: -halfDpi, y: 0 }),
+        ];
+    }
+
     public toString(): string {
         return `Square${this.center}`;
     }

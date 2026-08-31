@@ -39,7 +39,7 @@ await grid.awaitReady(); // resolves once the first grid data has loaded
 const cell = grid.getCell({ x: 120, y: 45 });
 console.log(cell.center, cell.corners);
 
-const snapped = grid.snapTo({ x: 120, y: 45 }, SnapTo.CENTER_AND_EDGE);
+const snapped = grid.snapTo({ x: 120, y: 45 }, SnapTo.CENTER | SnapTo.EDGE);
 
 const cellB = grid.getCell({ x: 220, y: 45 });
 const distanceInCells = grid.measure(cell, cellB); // or Vector2s, or a mix
@@ -56,7 +56,9 @@ it's a drop-in wherever the SDK's `Grid` type is expected, plus:
 - `snapshot` — an immutable, point-in-time `AnyGrid` (`SquareGrid | VHexGrid | HHexGrid | IsometricGrid | DimetricGrid`)
   of the grid's current state — useful if you need to pass a grid around without it changing under you, or
   outside the live `grid` singleton (eg. in a worker).
-- `snapTo(point, snapTo)` — snap to the nearest corner/center/edge (`SnapTo` is a bitflag enum).
+- `snapTo(point, snapTo)` — snap to the nearest corner/center/edge/edge midpoint (`SnapTo` is a bitflag
+  enum: `CORNER`, `CENTER`, `EDGE` for the nearest point anywhere along an edge, and `EDGE_MIDPOINT` for
+  the nearest edge's midpoint specifically).
 - `measure(...pointsOrCells)` — distance between points/cells, in grid cells, using whatever
   measurement (`EUCLIDEAN`/`CHEBYSHEV`/`MANHATTAN`/`ALTERNATING`) the scene is configured with. With
   three or more arguments it sums the distance between each consecutive pair (a path length); with zero

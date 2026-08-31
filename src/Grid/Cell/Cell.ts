@@ -14,6 +14,8 @@ export abstract class Cell {
 
     public abstract get corners(): Point[];
 
+    public abstract get edgeMidpoints(): Point[];
+
     public abstract nearestPointOnEdge(point: Vector2): Point;
 
     public abstract toString(): string;

@@ -50,6 +50,12 @@ test('snapTo ALL picks the single nearest candidate among center, corners and ed
     assert.deepEqual(xy(snapped), { x: 50, y: 0 });
 });
 
+test('snapTo EDGE_MIDPOINT returns the nearest edge midpoint', () => {
+    const grid = makeGrid();
+    const snapped = grid.snapTo({ x: 60, y: 3 }, SnapTo.EDGE_MIDPOINT);
+    assert.deepEqual(xy(snapped), { x: 50, y: 0 });
+});
+
 test('getNearestSnapType reports CENTER near the middle of a cell', () => {
     const grid = makeGrid();
     assert.equal(grid.getNearestSnapType({ x: 55, y: 55 }), SnapTo.CENTER);

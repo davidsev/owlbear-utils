@@ -39,6 +39,17 @@ export class HHex extends BaseHex {
         ];
     }
 
+    get edgeMidpoints(): Point[] {
+        return [
+            this.center.add({ x: (-this.grid.hexRadius * 3) / 4, y: this.grid.dpi / 4 }),
+            this.center.add({ x: 0, y: this.grid.dpi / 2 }),
+            this.center.add({ x: (this.grid.hexRadius * 3) / 4, y: this.grid.dpi / 4 }),
+            this.center.add({ x: (this.grid.hexRadius * 3) / 4, y: -this.grid.dpi / 4 }),
+            this.center.add({ x: 0, y: -this.grid.dpi / 2 }),
+            this.center.add({ x: (-this.grid.hexRadius * 3) / 4, y: -this.grid.dpi / 4 }),
+        ];
+    }
+
     public toString(): string {
         return `HHex${this.center}`;
     }

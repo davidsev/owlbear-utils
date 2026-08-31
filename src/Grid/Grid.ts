@@ -86,6 +86,7 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         if (snapTo & SnapTo.CENTER) possibleSnapPoints.push(cell.center);
         if (snapTo & SnapTo.CORNER) possibleSnapPoints.push(...cell.corners);
         if (snapTo & SnapTo.EDGE) possibleSnapPoints.push(cell.nearestPointOnEdge(point));
+        if (snapTo & SnapTo.EDGE_MIDPOINT) possibleSnapPoints.push(...cell.edgeMidpoints);
 
         // If we have no points to snap to, return the original point.
         if (possibleSnapPoints.length === 0) {

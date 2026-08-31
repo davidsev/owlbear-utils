@@ -21,6 +21,15 @@ export class Dimetric extends BaseAxonometric {
         ];
     }
 
+    get edgeMidpoints(): Point[] {
+        return [
+            this.center.add({ x: +this.grid.dpi / 2, y: -this.grid.dpi / 4 }),
+            this.center.add({ x: +this.grid.dpi / 2, y: +this.grid.dpi / 4 }),
+            this.center.add({ x: -this.grid.dpi / 2, y: +this.grid.dpi / 4 }),
+            this.center.add({ x: -this.grid.dpi / 2, y: -this.grid.dpi / 4 }),
+        ];
+    }
+
     public toString(): string {
         return `Dimetric${this.center}`;
     }
