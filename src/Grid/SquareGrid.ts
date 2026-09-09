@@ -3,11 +3,13 @@ import { Grid } from './Grid';
 import { Point } from './Point';
 import { Square } from './Cell/Square';
 
+/** A plain square grid. */
 export class SquareGrid extends Grid<Square> {
     public get type() {
         return 'SQUARE' as const;
     }
 
+    /** Returns the square cell that contains the given point, rounding to the nearest cell center. */
     public getCell(point: Vector2): Square {
         const halfDpi = { x: this.dpi / 2, y: this.dpi / 2 };
         const center = new Point(point).add(halfDpi).roundToNearest(this.dpi).sub(halfDpi);

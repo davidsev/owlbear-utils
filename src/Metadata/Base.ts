@@ -11,7 +11,11 @@ export abstract class BaseMetadataMapper<T> {
         public readonly defaultValues: T,
     ) {}
 
-    /** Return a copy of the provided object with any missing or wrongly-typed values filled from the defaults. */
+    /**
+     * Return a new object holding exactly the keys of `defaultValues`, taking each one from `values` when it's
+     * present and neither `undefined` nor `null`, and from `defaultValues` otherwise.  There's no type checking,
+     * keys not in `defaultValues` are dropped, and nested objects are taken wholesale rather than merged.
+     */
     public setDefaultValues(values: Metadata): T {
         return cleanMetadata(values, this.defaultValues);
     }

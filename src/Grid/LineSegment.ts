@@ -1,10 +1,14 @@
 import { Point } from './Point';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
 
+/** A line between two points, normalised on construction so direction doesn't affect `equals()`. */
 export class LineSegment {
     public readonly p1: Point;
     public readonly p2: Point;
 
+    /**
+     * @throws If the two points are identical, since that isn't a line.
+     */
     public constructor(p1: Vector2, p2: Vector2) {
         // Make sure the points aren't equal
         if (p1.x === p2.x && p1.y === p2.y) throw new Error('Cannot create a line with two identical points');
@@ -24,10 +28,12 @@ export class LineSegment {
         return `Line(${fmt(this.p1.x)},${fmt(this.p1.y)} -> ${fmt(this.p2.x)},${fmt(this.p2.y)})`;
     }
 
+    /** True if both endpoints match, regardless of which was passed as `p1`/`p2`. */
     public equals(other: LineSegment): boolean {
         return this.p1.equals(other.p1) && this.p2.equals(other.p2);
     }
 
+    /** The distance between the two endpoints. */
     public get length(): number {
         return this.p1.distanceTo(this.p2);
     }

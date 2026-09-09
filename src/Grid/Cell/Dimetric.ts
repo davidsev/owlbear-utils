@@ -4,6 +4,7 @@ import type { Cell } from './Cell';
 import { BaseAxonometric } from './BaseAxonometric';
 import type { DimetricGrid } from '../DimetricGrid';
 
+/** A cell of a `DimetricGrid`. */
 export class Dimetric extends BaseAxonometric {
     public declare readonly grid: DimetricGrid;
 
@@ -12,6 +13,7 @@ export class Dimetric extends BaseAxonometric {
         super(center, grid);
     }
 
+    /** The four corners of this diamond, starting top and going clockwise. */
     get corners(): Point[] {
         return [
             this.center.add({ x: 0, y: -this.grid.dpi / 2 }),
@@ -21,6 +23,7 @@ export class Dimetric extends BaseAxonometric {
         ];
     }
 
+    /** The midpoint of each of this cell's four edges, starting top-right and going clockwise. */
     get edgeMidpoints(): Point[] {
         return [
             this.center.add({ x: +this.grid.dpi / 2, y: -this.grid.dpi / 4 }),
@@ -30,10 +33,12 @@ export class Dimetric extends BaseAxonometric {
         ];
     }
 
+    /** Formats as `"Dimetric(x, y)"`. */
     public toString(): string {
         return `Dimetric${this.center}`;
     }
 
+    /** This cell's four (or eight, with diagonals) neighboring cells. */
     public neighbors(include_corners: boolean): Dimetric[] {
         const [u, v] = this.grid.xy_to_uv(this.center.x, this.center.y);
 
@@ -53,12 +58,14 @@ export class Dimetric extends BaseAxonometric {
         return [...sides, ...(include_corners ? corners : [])];
     }
 
+    /** True if this cell and `other` share an edge. */
     isAdjacent(other: Cell): boolean {
         const xDiff = Math.abs(this.center.x - other.center.x);
         const yDiff = Math.abs(this.center.y - other.center.y);
         return Math.abs(xDiff - this.grid.dpi) < 0.1 && Math.abs(yDiff - this.grid.dpi / 2) < 0.1;
     }
 
+    /** True if this cell contains the given point. */
     public containsPoint(point: Vector2): boolean {
         const cell = this.grid.getCell(point);
         return this.center.equals(cell.center);

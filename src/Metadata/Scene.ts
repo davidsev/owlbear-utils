@@ -1,6 +1,7 @@
 import OBR, { type Metadata } from '@owlbear-rodeo/sdk';
 import { BaseMetadataMapper } from './Base';
 
+/** A `BaseMetadataMapper` backed by the scene's metadata, namespaced under `key`. */
 export class SceneMetadataMapper<T> extends BaseMetadataMapper<T> {
     protected async getRawMetadata(): Promise<Metadata> {
         if (await OBR.scene.isReady()) {

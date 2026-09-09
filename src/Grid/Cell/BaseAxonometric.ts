@@ -4,6 +4,7 @@ import { Point } from '../Point';
 import { lineIntersection } from '../lineIntersection';
 import type { BaseAxonometricGrid } from '../BaseAxonometricGrid';
 
+/** Shared by `Isometric` and `Dimetric`, the two axonometric cell types. */
 export abstract class BaseAxonometric extends Cell {
     public declare readonly grid: BaseAxonometricGrid;
     public readonly center: Point;
@@ -13,6 +14,11 @@ export abstract class BaseAxonometric extends Cell {
         this.center = new Point(center);
     }
 
+    /**
+     * `point` projected perpendicularly onto the infinite line through its two nearest corners.  For a point
+     * inside the cell that is the closest point on the perimeter; for one outside it the projection can land
+     * past the edge's ends, off the cell entirely.
+     */
     public nearestPointOnEdge(point: Vector2): Point {
         const nearestCorner = Point.nearestPoint(point, this.corners);
         const neighboringCorners = this.corners.filter((corner) => {
@@ -30,6 +36,7 @@ export abstract class BaseAxonometric extends Cell {
         return lineIntersection(nearestCorner, secondNearestCorner, point, pointOnNormal);
     }
 
+    /** This cell's coordinates in the grid's (u, v) axonometric coordinate system. */
     get axonometricCoords(): [u: number, v: number] {
         return this.grid.xy_to_uv(this.center.x, this.center.y);
     }

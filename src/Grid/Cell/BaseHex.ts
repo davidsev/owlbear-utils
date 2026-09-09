@@ -4,6 +4,7 @@ import { Point } from '../Point';
 import { lineIntersection } from '../lineIntersection';
 import type { BaseHexGrid } from '../BaseHexGrid';
 
+/** Shared by `VHex` and `HHex`, the two hex cell orientations. */
 export abstract class BaseHex extends Cell {
     public declare readonly grid: BaseHexGrid;
     public readonly center: Point;
@@ -13,6 +14,11 @@ export abstract class BaseHex extends Cell {
         this.center = new Point(center);
     }
 
+    /**
+     * The point where the line from the cell's center through `point` crosses the nearest edge, ie. a radial
+     * projection onto the perimeter rather than the closest point on it.  (`BaseAxonometric` projects
+     * perpendicularly instead, so despite the shared name the two don't agree.)
+     */
     public nearestPointOnEdge(point: Vector2): Point {
         const nearestCorner = Point.nearestPoint(point, this.corners);
         const secondNearestCorner = Point.nearestPoint(
@@ -36,5 +42,6 @@ export abstract class BaseHex extends Cell {
         return lineIntersection(nearestCorner, secondNearestCorner, point, this.center);
     }
 
+    /** This cell's axial (q, r, s) hex coordinates, where s is always `-q - r`. */
     public abstract get axialCoords(): [q: number, r: number, s: number];
 }

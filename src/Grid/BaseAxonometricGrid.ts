@@ -8,8 +8,17 @@ import type { BaseAxonometric } from './Cell/BaseAxonometric';
  * those and their own `getCell`.
  */
 export abstract class BaseAxonometricGrid<C extends BaseAxonometric = BaseAxonometric> extends Grid<C> {
+    /**
+     * Converts a scene-space point to fractional axonometric (u, v) coordinates.  The whole-number points of
+     * the (u, v) lattice are cell *corners* rather than centers, so a cell's center always comes back as a
+     * pair of half-integers -- rounding the result doesn't give you a cell index.
+     */
     public abstract xy_to_uv(x: number, y: number): [u: number, v: number];
 
+    /**
+     * The inverse of `xy_to_uv`, with the same caveat: whole-number (u, v) map to cell corners, so
+     * `uv_to_xy(0, 0)` is a corner shared by four cells rather than any one cell's center.
+     */
     public abstract uv_to_xy(u: number, v: number): [x: number, y: number];
 
     protected iterateCells(points: C[]): C[] {

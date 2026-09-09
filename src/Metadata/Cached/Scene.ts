@@ -2,6 +2,7 @@ import OBR, { type Metadata } from '@owlbear-rodeo/sdk';
 import { BaseCachedMetadata } from './Base';
 import { SceneMetadataMapper } from '../Scene';
 
+/** A `BaseCachedMetadata` backed by the scene's metadata. */
 export class CachedSceneMetadata<T> extends BaseCachedMetadata<T> {
     protected setupEvent(callback: (metadata: Metadata) => void): void {
         OBR.scene.onMetadataChange((metadata: Metadata) => {

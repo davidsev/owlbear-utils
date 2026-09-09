@@ -124,6 +124,7 @@ export class LiveGrid implements BaseGrid {
         };
     }
 
+    /** Resolves once the first grid snapshot has loaded. */
     public async awaitReady() {
         if (this.current) return Promise.resolve();
         return new Promise<void>((resolve) => {
@@ -144,38 +145,47 @@ export class LiveGrid implements BaseGrid {
         return this.grid;
     }
 
+    /** The pixel size of one grid cell. */
     get dpi(): number {
         return this.grid.dpi;
     }
 
+    /** The radius of a hex cell, in pixels, derived from `dpi`. */
     get hexRadius(): number {
         return this.grid.hexRadius;
     }
 
+    /** The scene's grid line/shading style. */
     get style(): GridStyle {
         return this.grid.style;
     }
 
+    /** Which grid type the scene currently uses. */
     get type(): GridType {
         return this.grid.type;
     }
 
+    /** The distance measurement rule this grid uses (Euclidean, Chebyshev, Manhattan, or Alternating). */
     get measurement(): GridMeasurement {
         return this.grid.measurement;
     }
 
+    /** The unit label for one grid cell, eg. `"5ft"`. */
     get scale(): string {
         return this.grid.scale;
     }
 
+    /** The scale settings (cell size and unit label) of the current snapshot. */
     get gridScale(): GridScale {
         return this.grid.gridScale;
     }
 
+    /** Returns the cell of the current grid type that contains the given point. */
     public getCell(point: Vector2): AnyCell {
         return this.grid.getCell(point);
     }
 
+    /** Snaps a point to the nearest of the requested `SnapTo` targets (center, corner, edge, edge midpoint) of its cell. */
     public snapTo(point: Vector2, snapTo: SnapTo): Point {
         return this.grid.snapTo(point, snapTo);
     }
@@ -190,6 +200,7 @@ export class LiveGrid implements BaseGrid {
         return this.grid.getNearestSnapType(point);
     }
 
+    /** Returns every cell that touches the convex hull of the given cells (see `Grid.iterateCellsBoundingPoints`). */
     public iterateCellsBoundingPoints<T extends AnyCell>(points: T[]): T[] {
         // Go via the base class: each subclass narrows this method's parameter, so calling it on
         // the AnyGrid union asks for the intersection of all five cell types, which nothing

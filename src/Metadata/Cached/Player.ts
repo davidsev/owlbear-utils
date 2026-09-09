@@ -2,6 +2,7 @@ import OBR, { type Metadata, type Player } from '@owlbear-rodeo/sdk';
 import { BaseCachedMetadata } from './Base';
 import { PlayerMetadataMapper } from '../Player';
 
+/** A `BaseCachedMetadata` backed by the local player's metadata. */
 export class CachedPlayerMetadata<T> extends BaseCachedMetadata<T> {
     protected setupEvent(callback: (metadata: Metadata) => void): void {
         OBR.player.onChange((player: Player) => {

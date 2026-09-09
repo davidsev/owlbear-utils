@@ -5,6 +5,7 @@ import { axial_round } from '../BaseHexGrid';
 import { BaseHex } from './BaseHex';
 import type { HHexGrid } from '../HHexGrid';
 
+/** A cell of an `HHexGrid`. */
 export class HHex extends BaseHex {
     public declare readonly grid: HHexGrid;
 
@@ -13,6 +14,7 @@ export class HHex extends BaseHex {
         super(center, grid);
     }
 
+    /** Builds the HHex at the given axial (q, r) hex coordinates. */
     static fromAxial(q: number, r: number, grid: HHexGrid): HHex {
         const [round_q, round_r] = axial_round(q, r);
         const [x, y] = grid.axial_to_xy(round_q, round_r);
@@ -20,6 +22,7 @@ export class HHex extends BaseHex {
         return new HHex({ x: x - grid.hexRadius / 2, y }, grid);
     }
 
+    /** This cell's axial (q, r, s) hex coordinates, where s is always `-q - r`. */
     get axialCoords(): [q: number, r: number, s: number] {
         // getCell/fromAxial offset x by half a hex before converting (OBR's 0,0 isn't a cell
         // center), so invert that offset here to get back the exact integers fromAxial was built
@@ -28,6 +31,11 @@ export class HHex extends BaseHex {
         return [q, r, -q - r];
     }
 
+    /**
+     * The six corners of this hex, starting left and going counter-clockwise on screen (left, bottom-left,
+     * bottom-right, right, top-right, top-left).  That's the opposite winding to the other cell types, so
+     * this hex's `edges` and `edgeMidpoints` come out reversed relative to theirs too.
+     */
     get corners(): Point[] {
         return [
             this.center.add({ x: -this.grid.hexRadius, y: 0 }),
@@ -39,6 +47,7 @@ export class HHex extends BaseHex {
         ];
     }
 
+    /** The midpoint of each of this hex's six edges, in the same order as `corners`. */
     get edgeMidpoints(): Point[] {
         return [
             this.center.add({ x: (-this.grid.hexRadius * 3) / 4, y: this.grid.dpi / 4 }),
@@ -50,10 +59,12 @@ export class HHex extends BaseHex {
         ];
     }
 
+    /** Formats as `"HHex(x, y)"`. */
     public toString(): string {
         return `HHex${this.center}`;
     }
 
+    /** True if this hex and `other` share an edge. */
     isAdjacent(other: Cell): boolean {
         const xDiff = Math.abs(this.center.x - other.center.x);
         const yDiff = Math.abs(this.center.y - other.center.y);
@@ -63,11 +74,13 @@ export class HHex extends BaseHex {
         );
     }
 
+    /** True if this hex contains the given point. */
     public containsPoint(point: Vector2): boolean {
         const cell = this.grid.getCell(point);
         return this.center.equals(cell.center);
     }
 
+    /** This hex's six neighboring cells. Hex grids have no diagonal neighbors, so `include_corners` is ignored. */
     public neighbors(_include_corners: boolean): HHex[] {
         const [q, r] = this.grid.xy_to_axial(this.center.x, this.center.y);
 

@@ -35,6 +35,7 @@ export { CachedSceneMetadata } from './Metadata/Cached/Scene';
 export { awaitReady } from './awaitReady';
 export { awaitScene } from './awaitScene';
 
+/** The current scene's grid, kept in sync with OBR automatically. Initialised once `OBR.onReady` fires below. */
 export const grid = new LiveGrid();
 
 OBR.onReady(() => {

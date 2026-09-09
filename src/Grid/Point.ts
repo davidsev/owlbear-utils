@@ -11,7 +11,9 @@ export class Point implements Vector2 {
     public readonly x: number;
     public readonly y: number;
 
+    /** Builds a Point from a `{x, y}` object, cleaning up any `-0`. */
     constructor(vector: Vector2);
+    /** Builds a Point from separate x and y coordinates, cleaning up any `-0`. */
     constructor(x: number, y: number);
     // biome-ignore lint/suspicious/noExplicitAny: variadic overload implementation signature, narrowed below by length/typeof checks
     constructor(...arr: any[]) {
@@ -24,6 +26,10 @@ export class Point implements Vector2 {
         } else throw new Error('Invalid arguments to Point constructor');
     }
 
+    /**
+     * Returns whichever of `points` is closest to `center`.
+     * @throws If `points` is empty.
+     */
     public static nearestPoint(center: Vector2, points: Vector2[]): Point {
         if (points.length === 0) throw new Error('Cannot find nearest point of empty array');
 
@@ -41,6 +47,7 @@ export class Point implements Vector2 {
         return new Point(closestPoint);
     }
 
+    /** Subtracts `rhs` from this point. */
     public sub(rhs: Vector2): Point {
         return new Point({
             x: this.x - rhs.x,
@@ -48,6 +55,7 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Adds `rhs` to this point. */
     public add(rhs: Vector2): Point {
         return new Point({
             x: this.x + rhs.x,
@@ -55,6 +63,7 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Multiplies both coordinates by `rhs`. Same as `mult()`. */
     public scale(rhs: number): Point {
         return new Point({
             x: this.x * rhs,
@@ -62,6 +71,7 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Multiplies both coordinates by `rhs`. Same as `scale()`. */
     public mult(rhs: number): Point {
         return new Point({
             x: this.x * rhs,
@@ -69,6 +79,7 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Divides both coordinates by `rhs`. */
     public div(rhs: number): Point {
         return new Point({
             x: this.x / rhs,
@@ -76,7 +87,9 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Rounds each coordinate to the nearest multiple of the matching coordinate in `roundTo`. */
     public roundToNearest(roundTo: Vector2): Point;
+    /** Rounds both coordinates to the nearest multiple of `roundTo`. */
     public roundToNearest(roundTo: number): Point;
     public roundToNearest(roundTo: number | Vector2): Point {
         const n = typeof roundTo === 'number' ? { x: roundTo, y: roundTo } : roundTo;
@@ -86,6 +99,7 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Rounds both coordinates up to the nearest multiple of `n`. */
     public roundUpToNearest(n: number): Point {
         return new Point({
             x: Math.ceil(this.x / n) * n,
@@ -93,6 +107,7 @@ export class Point implements Vector2 {
         });
     }
 
+    /** Rounds both coordinates down to the nearest multiple of `n`. */
     public roundDownToNearest(n: number): Point {
         return new Point({
             x: Math.floor(this.x / n) * n,
@@ -100,14 +115,20 @@ export class Point implements Vector2 {
         });
     }
 
+    /** The Euclidean distance to `rhs`. */
     public distanceTo(rhs: Vector2): number {
         return Math.sqrt((this.x - rhs.x) ** 2 + (this.y - rhs.y) ** 2);
     }
 
+    /** The length of this point treated as a vector from the origin. */
     public get magnitude(): number {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
+    /**
+     * Returns a unit vector in the same direction as this point.
+     * @throws If this point is the zero vector.
+     */
     public normalise(): Point {
         const magnitude = this.magnitude;
         if (magnitude === 0) throw new Error('Cannot normalise a zero-length vector');
@@ -128,6 +149,7 @@ export class Point implements Vector2 {
         return Math.abs(this.x - rhs.x) < 1 && Math.abs(this.y - rhs.y) < 1;
     }
 
+    /** Formats as `"(x, y)"`, rounded to whole numbers. */
     public toString(): string {
         return `(${this.x.toFixed(0)}, ${this.y.toFixed(0)})`;
     }

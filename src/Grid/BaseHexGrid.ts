@@ -2,7 +2,10 @@ import { Grid } from './Grid';
 import type { Point } from './Point';
 import type { BaseHex } from './Cell/BaseHex';
 
-// Mostly taken from https://www.redblobgames.com/grids/hexagons/
+/**
+ * Rounds fractional axial hex coordinates to the nearest whole (q, r) cell.
+ * Mostly taken from https://www.redblobgames.com/grids/hexagons/
+ */
 export function axial_round(x: number, y: number): [number, number] {
     const rounded_x = Math.round(x);
     const rounded_y = Math.round(y);
@@ -18,8 +21,19 @@ export function axial_round(x: number, y: number): [number, number] {
  * conversions below, so the subclasses only have to supply those and their own `getCell`.
  */
 export abstract class BaseHexGrid<C extends BaseHex = BaseHex> extends Grid<C> {
+    /**
+     * Converts a scene-space point to fractional axial (q, r) coordinates in a hex lattice centred on the
+     * origin.  OBR's origin isn't a cell center, so this is *not* the same coordinate system as the one
+     * `Cell.axialCoords` and `fromAxial` use -- `getCell` applies a half-hex offset before calling this, and
+     * a caller who wants coordinates that match a cell's own has to do the same.
+     */
     public abstract xy_to_axial(x: number, y: number): [q: number, r: number];
 
+    /**
+     * The exact inverse of `xy_to_axial`, so it shares the same caveat: the point it returns for a given
+     * (q, r) sits half a hex away from the center of the cell whose `axialCoords` are (q, r).  Use
+     * `VHex.fromAxial`/`HHex.fromAxial` to go from cell coordinates to the cell itself.
+     */
     public abstract axial_to_xy(q: number, r: number): [x: number, y: number];
 
     protected iterateCells(points: C[]): C[] {

@@ -15,6 +15,7 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
     private readonly gridData: BaseGrid;
     private readonly scaleData: GridScale;
 
+    /** Builds an immutable snapshot from OBR's raw grid and scale data. Throws if `gridData.type` doesn't match the subclass. */
     public constructor(gridData: BaseGrid, scaleData: GridScale) {
         this.gridData = gridData;
         this.scaleData = scaleData;
@@ -40,26 +41,32 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         if (this.gridData.type !== this.type) throw new Error(`Cannot create a "${this.type}" grid from "${this.gridData.type}" grid data`);
     }
 
+    /** The pixel size of one grid cell. */
     get dpi(): number {
         return this.gridData.dpi;
     }
 
+    /** The radius of a hex cell, in pixels, derived from `dpi`. */
     get hexRadius(): number {
         return this.gridData.dpi / SQRT3;
     }
 
+    /** The scene's grid line/shading style. */
     get style(): GridStyle {
         return this.gridData.style;
     }
 
+    /** The distance measurement rule this grid uses (Euclidean, Chebyshev, Manhattan, or Alternating). */
     get measurement(): GridMeasurement {
         return this.gridData.measurement;
     }
 
+    /** The unit label for one grid cell, eg. `"5ft"`. */
     get scale(): string {
         return this.gridData.scale;
     }
 
+    /** The scale settings (cell size and unit label) this snapshot was built with. */
     get gridScale(): GridScale {
         return this.scaleData;
     }
@@ -74,8 +81,10 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         return new Ctor({ ...this.gridData, measurement }, this.scaleData);
     }
 
+    /** Returns the cell of this grid type that contains the given point. */
     public abstract getCell(point: Vector2): C;
 
+    /** Snaps a point to the nearest of the requested {@link SnapTo} targets (center, corner, edge, edge midpoint) of its cell. */
     public snapTo(point: Vector2, snapTo: SnapTo): Point {
         const cell = this.getCell(point);
 
@@ -101,7 +110,11 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         return Point.nearestPoint(point, possibleSnapPoints);
     }
 
-    /** Returns the distance between two point, measured in grid cells. */
+    /**
+     * Returns the distance between two point, measured in grid cells.
+     * @throws If `measurement` is MANHATTAN or ALTERNATING and this grid type doesn't support it, or if it
+     * isn't one of the four measurements we know about.
+     */
     public measure(...points: (Cell | Vector2)[]): number {
         const cleanPoints = points.map((p) => (p instanceof Cell ? p.center : new Point(p)));
 
@@ -120,6 +133,7 @@ export abstract class Grid<C extends Cell = Cell> implements BaseGrid {
         throw new Error(`Unrecognised measurement "${this.measurement}"`);
     }
 
+    /** The per-grid-type Chebyshev distance calculation, in grid cells. */
     protected abstract measureChebyshev(points: Point[]): number;
 
     /** Not every grid type supports this measurement, so the default is to throw. */
