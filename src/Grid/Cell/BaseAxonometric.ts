@@ -1,6 +1,7 @@
 import { Cell } from './Cell';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
 import { Point } from '../Point';
+import { lineIntersection } from '../lineIntersection';
 import type { BaseAxonometricGrid } from '../BaseAxonometricGrid';
 
 export abstract class BaseAxonometric extends Cell {
@@ -19,27 +20,14 @@ export abstract class BaseAxonometric extends Cell {
         });
         const secondNearestCorner = Point.nearestPoint(point, neighboringCorners);
 
-        // Line 1 is nearestCorner to nextNearestCorner
-        const x1 = nearestCorner.x;
-        const y1 = nearestCorner.y;
-        const x2 = secondNearestCorner.x;
-        const y2 = secondNearestCorner.y;
-
+        // Line 1 is nearestCorner to secondNearestCorner, ie. the nearest edge.
         // Line 2 is the perpendicular to line 1 that goes through the point.
         // EG move nearestCorner to 0,0, rotate 90deg, then move to Point
-        const x3 = point.x;
-        const y3 = point.y;
-        const edgeDirection = secondNearestCorner.sub(nearestCorner);
-        const edgeNormal = edgeDirection.perpendicular();
-        const movedEndPoint = edgeNormal.add(point);
-        const x4 = movedEndPoint.x;
-        const y4 = movedEndPoint.y;
+        const edgeNormal = secondNearestCorner.sub(nearestCorner).perpendicular();
+        const pointOnNormal = edgeNormal.add(point);
 
-        // Find where they intersect.  (https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection)
-        return new Point({
-            x: ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)),
-            y: ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)),
-        });
+        // The two lines are perpendicular by construction, so they always intersect.
+        return lineIntersection(nearestCorner, secondNearestCorner, point, pointOnNormal);
     }
 
     get axonometricCoords(): [u: number, v: number] {
