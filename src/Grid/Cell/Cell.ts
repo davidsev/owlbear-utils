@@ -1,4 +1,4 @@
-import type { Point } from '../Point';
+import { Point } from '../Point';
 import type { Vector2 } from '@owlbear-rodeo/sdk';
 import { LineSegment } from '../LineSegment';
 import type { Grid } from '../Grid';
@@ -22,14 +22,27 @@ export abstract class Cell {
     public abstract get edgeMidpoints(): Point[];
 
     /**
-     * A point on this cell's perimeter near the given point, intended for points inside the cell.
-     * Implementations project onto an edge's infinite line without clamping to the edge, so for a point
-     * outside the cell the result may not be the nearest such point, or may not be on the perimeter at all.
+     * A point on this cell's perimeter near the given point. Works for points both inside and outside the cell.
+     * `Square` and `BaseAxonometric` return the true nearest point on the perimeter; `BaseHex` instead returns
+     * where the ray from the cell's center through `point` crosses the perimeter (see there for why).
      */
     public abstract nearestPointOnEdge(point: Vector2): Point;
 
     /** Formats as the cell type followed by its center, eg. `"Square(50, 50)"`. */
     public abstract toString(): string;
+
+    /**
+     * The closest point to `point` on any of this cell's edges -- the standard closest-point-on-convex-polygon
+     * algorithm, correct whether `point` is inside or outside the cell. `Square` and `BaseAxonometric` use this
+     * for `nearestPointOnEdge`; `BaseHex` doesn't, since its `nearestPointOnEdge` is deliberately a radial
+     * projection instead.
+     */
+    protected nearestPointOnPerimeter(point: Vector2): Point {
+        return Point.nearestPoint(
+            point,
+            this.edges.map((edge) => edge.nearestPointOnSegment(point)),
+        );
+    }
 
     /** This cell's edges as line segments, derived from `corners`. */
     public get edges(): LineSegment[] {

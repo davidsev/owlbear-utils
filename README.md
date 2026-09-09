@@ -174,7 +174,8 @@ normalised vectors — `(1, 0)` and `(0.6, 0.8)` compare equal despite pointing 
 directions, test `distanceTo` against a small epsilon instead.
 
 `LineSegment` wraps two `Point`s (`p1`/`p2`, normalised so direction doesn't matter for `equals()`) and
-exposes `.length`.
+exposes `.length` and `.nearestPointOnSegment(point)` (the closest point on the finite segment, not the
+infinite line through it).
 
 ## Metadata
 

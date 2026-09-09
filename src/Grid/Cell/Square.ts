@@ -40,24 +40,9 @@ export class Square extends Cell {
         return `Square${this.center}`;
     }
 
-    /**
-     * The closest point on this square's perimeter to the given point, for a point inside the square.  The
-     * candidates aren't clamped to the edges, so for a point outside it the result can be off the perimeter.
-     */
+    /** The closest point on this square's perimeter to the given point, whether inside or outside the square. */
     public nearestPointOnEdge(point: Vector2): Point {
-        const minX = this.center.x - this.grid.dpi / 2;
-        const maxX = this.center.x + this.grid.dpi / 2;
-        const minY = this.center.y - this.grid.dpi / 2;
-        const maxY = this.center.y + this.grid.dpi / 2;
-
-        const points = [
-            { x: minX, y: point.y },
-            { x: maxX, y: point.y },
-            { x: point.x, y: minY },
-            { x: point.x, y: maxY },
-        ];
-
-        return Point.nearestPoint(point, points);
+        return this.nearestPointOnPerimeter(point);
     }
 
     /** True if this square and `other` share an edge (not just a corner). */

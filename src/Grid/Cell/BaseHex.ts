@@ -15,31 +15,38 @@ export abstract class BaseHex extends Cell {
     }
 
     /**
-     * The point where the line from the cell's center through `point` crosses the nearest edge, ie. a radial
-     * projection onto the perimeter rather than the closest point on it.  (`BaseAxonometric` projects
-     * perpendicularly instead, so despite the shared name the two don't agree.)
+     * The point where the line from the cell's center through `point` crosses the perimeter, ie. a radial
+     * projection onto the perimeter rather than the closest point on it.  (`BaseAxonometric` returns the
+     * closest point instead, so despite the shared name the two don't agree.)  Works for `point` both inside
+     * and outside the cell, since the edge it picks is whichever one the ray actually crosses, not whichever
+     * one has the nearest corners.
      */
     public nearestPointOnEdge(point: Vector2): Point {
-        const nearestCorner = Point.nearestPoint(point, this.corners);
-        const secondNearestCorner = Point.nearestPoint(
-            point,
-            this.corners.filter((corner) => corner.distanceTo(nearestCorner) > 5),
-        );
-
-        // Line 1 is nearestCorner to secondNearestCorner, ie. the nearest edge.
-        // Line 2 is point to center.
-
-        // If point is the cell's own center, line 2 has zero length so the intersection below is
-        // undefined (0/0).  The center is equidistant from every edge, so just return the midpoint
-        // of the two nearest corners -- ie. the midpoint of line 1, which is a point on an edge.
+        // If point is the cell's own center, the ray's direction is undefined.  The center is equidistant
+        // from every edge, so just return an edge midpoint -- ie. a point on an edge.
         if (point.x === this.center.x && point.y === this.center.y) {
-            return new Point({
-                x: (nearestCorner.x + secondNearestCorner.x) / 2,
-                y: (nearestCorner.y + secondNearestCorner.y) / 2,
-            });
+            return this.edgeMidpoints[0];
         }
 
-        return lineIntersection(nearestCorner, secondNearestCorner, point, this.center);
+        for (const edge of this.edges) {
+            const intersection = lineIntersection(edge.p1, edge.p2, this.center, point);
+            if (!Number.isFinite(intersection.x) || !Number.isFinite(intersection.y)) continue; // Parallel to this edge.
+
+            // Where intersection falls along edge.p1 -> edge.p2, as a fraction; off the finite edge if outside [0, 1].
+            const dx = edge.p2.x - edge.p1.x;
+            const dy = edge.p2.y - edge.p1.y;
+            const t = ((intersection.x - edge.p1.x) * dx + (intersection.y - edge.p1.y) * dy) / (dx * dx + dy * dy);
+            if (t < -1e-6 || t > 1 + 1e-6) continue;
+
+            // Only the crossing in the direction of `point` (not the one behind the center) counts.
+            const forward =
+                (intersection.x - this.center.x) * (point.x - this.center.x) + (intersection.y - this.center.y) * (point.y - this.center.y);
+            if (forward <= 0) continue;
+
+            return intersection;
+        }
+
+        throw new Error(`nearestPointOnEdge: no edge of ${this} intersects the ray from its center through ${new Point(point)}`);
     }
 
     /** This cell's axial (q, r, s) hex coordinates, where s is always `-q - r`. */

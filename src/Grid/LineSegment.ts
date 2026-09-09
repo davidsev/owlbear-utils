@@ -37,4 +37,16 @@ export class LineSegment {
     public get length(): number {
         return this.p1.distanceTo(this.p2);
     }
+
+    /** The closest point on this finite segment (not the infinite line through it) to `point`. */
+    public nearestPointOnSegment(point: Vector2): Point {
+        const dx = this.p2.x - this.p1.x;
+        const dy = this.p2.y - this.p1.y;
+        const lengthSquared = dx * dx + dy * dy;
+        const t = Math.max(0, Math.min(1, ((point.x - this.p1.x) * dx + (point.y - this.p1.y) * dy) / lengthSquared));
+        return new Point({
+            x: this.p1.x + t * dx,
+            y: this.p1.y + t * dy,
+        });
+    }
 }
