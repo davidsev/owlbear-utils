@@ -163,8 +163,15 @@ already know the type — it validates the data matches at construction time eit
 
 `Point` is an immutable `Vector2` with arithmetic helpers: `add`, `sub`, `scale`/`mult`, `div`,
 `roundToNearest`/`roundUpToNearest`/`roundDownToNearest`, `distanceTo`, `equals` (true if both x and y
-are within 1 unit — a per-axis check, not a radial distance — to absorb floating point noise), and
-`Point.nearestPoint(center, points)`.
+are within 1 scene unit — a per-axis check, not a radial distance — to absorb floating point noise), and
+`Point.nearestPoint(center, points)`. For vector-style use, `.magnitude` gives the length, `.normalise()`
+scales to a unit vector (throws on a zero-length vector), and `.perpendicular()` rotates 90deg
+counterclockwise on a y-down grid (the left-hand perpendicular), keeping the same magnitude — chain
+`.normalise()` on the result for a unit normal.
+
+Note that `equals`'s tolerance is sized for scene coordinates, which makes it far too coarse for
+normalised vectors — `(1, 0)` and `(0.6, 0.8)` compare equal despite pointing 53deg apart. To compare
+directions, test `distanceTo` against a small epsilon instead.
 
 `LineSegment` wraps two `Point`s (`p1`/`p2`, normalised so direction doesn't matter for `equals()`) and
 exposes `.length`.

@@ -104,6 +104,26 @@ export class Point implements Vector2 {
         return Math.sqrt((this.x - rhs.x) ** 2 + (this.y - rhs.y) ** 2);
     }
 
+    public get magnitude(): number {
+        return Math.sqrt(this.x ** 2 + this.y ** 2);
+    }
+
+    public normalise(): Point {
+        const magnitude = this.magnitude;
+        if (magnitude === 0) throw new Error('Cannot normalise a zero-length vector');
+        return this.div(magnitude);
+    }
+
+    /** The left-hand perpendicular, ie. rotated 90deg counterclockwise on a y-down grid.  Same magnitude as this vector - chain .normalise() for a unit vector. */
+    public perpendicular(): Point {
+        return new Point({ x: this.y, y: -this.x });
+    }
+
+    /**
+     * True if both x and y are within 1 scene unit of rhs.  A per-axis check, not a radial distance, sized to absorb
+     * floating point noise in scene coordinates.  That makes it far too coarse for normalised vectors - compare those
+     * with distanceTo against a small epsilon instead.
+     */
     public equals(rhs: Vector2): boolean {
         return Math.abs(this.x - rhs.x) < 1 && Math.abs(this.y - rhs.y) < 1;
     }

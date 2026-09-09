@@ -25,13 +25,13 @@ export abstract class BaseAxonometric extends Cell {
         const x2 = secondNearestCorner.x;
         const y2 = secondNearestCorner.y;
 
-        // Line 2 is the tangent to the line that goes through the point.
+        // Line 2 is the perpendicular to line 1 that goes through the point.
         // EG move nearestCorner to 0,0, rotate 90deg, then move to Point
         const x3 = point.x;
         const y3 = point.y;
-        const normalisedEndPoint = secondNearestCorner.sub(nearestCorner);
-        const rotated = new Point({ x: normalisedEndPoint.y, y: -normalisedEndPoint.x });
-        const movedEndPoint = rotated.add(point);
+        const edgeDirection = secondNearestCorner.sub(nearestCorner);
+        const edgeNormal = edgeDirection.perpendicular();
+        const movedEndPoint = edgeNormal.add(point);
         const x4 = movedEndPoint.x;
         const y4 = movedEndPoint.y;
 

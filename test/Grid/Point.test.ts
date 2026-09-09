@@ -102,3 +102,25 @@ test('equals is true within a 1 unit tolerance', () => {
 test('toString formats to integer coordinates', () => {
     assert.equal(new Point(1.6, 2.4).toString(), '(2, 2)');
 });
+
+test('magnitude computes the vector length', () => {
+    assert.equal(new Point(3, 4).magnitude, 5);
+});
+
+test('normalise scales to a unit vector', () => {
+    const p = new Point(3, 4).normalise();
+    assert.equal(p.magnitude, 1);
+    assert.equal(p.x, 0.6);
+    assert.equal(p.y, 0.8);
+});
+
+test('normalise throws on a zero-length vector', () => {
+    assert.throws(() => new Point(0, 0).normalise());
+});
+
+test('perpendicular rotates 90deg left, keeping magnitude', () => {
+    const p = new Point(3, 4).perpendicular();
+    assert.equal(p.x, 4);
+    assert.equal(p.y, -3);
+    assert.equal(p.magnitude, 5);
+});
